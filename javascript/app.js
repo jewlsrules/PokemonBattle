@@ -1,6 +1,8 @@
 $(()=>{
 
 
+  let $clickToPick = $('.click-to-pick')
+
   //click function for choosing your pokemon
   $('.poke-picture').on('click', (event)=> {
     let $pokemonName = $(event.currentTarget).children('img').attr('id')
@@ -16,14 +18,19 @@ $(()=>{
       (data)=> {
         let $pokemonName = data.name
         let $pokemonXP = data.base_experience
-        console.log("This Pokemon's type is: "+ $pokemonName);
-        console.log("This Pokemon has " + $pokemonXP + " XP");
 
+        //put the data from the api into the modal.
         $('.poke-type').text($pokemonName)
         $('.poke-xp').text($pokemonXP)
-      }
-    )
-
+      })
   }) //closing tag for click function
+
+  //click function to choose your starting pokemon
+  $clickToPick.on('click', (event)=>{
+    let $clickParent = $(event.target).parent().parent();
+    let $pokemonName = $clickParent.children('.poke-picture').children('img').attr('id')
+    console.log($pokemonName);
+    alert('Are you sure you want to pick '+$pokemonName+"?")
+  })
 
 })
