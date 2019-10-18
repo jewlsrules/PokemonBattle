@@ -55,6 +55,7 @@ div img {
 
 .battle-play {
   display: none;
+  flex-direction: row;
 }
 
 .players-pokemon {
@@ -69,6 +70,7 @@ div img {
 .players-pokemon-photo {
   align-self: center;
   width: 80%;
+  height: 60%;
 }
 
 .current-pokemon-name {
@@ -84,4 +86,9 @@ div img {
   text-align: left;
   width: 100%;
   padding-left: 20%;
+}
+
+.action-area {
+  width: 65%;
+  border: 1px solid black;
 }

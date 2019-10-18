@@ -1,12 +1,22 @@
 $(()=>{
 
+  //basic game information
   const $choosePokemon = $('.choose-pokemon')
   let $clickToPick = $('.click-to-pick')
-  let playersCurrentPokemon
   let $playersPokemonDiv = $('.players-pokemon')
+
+ //players information
+  let playersCurrentPokemon
   let $playersPokemonImgSrc;
   const moveArray = [];
   let pokemonXP
+  let wins = 0;
+  let losses = 0;
+
+  //opponent information
+  let opponentPokemon
+  let oppMoveArray = [];
+  let opponentXP
 
   //click function for choosing your pokemon
   $('.poke-picture').on('click', (event)=> {
@@ -47,7 +57,7 @@ $(()=>{
 
   const createPlayersPokemonArea = () => {
     //show the div that most of the game action will happen in.
-    $('.battle-play').show();
+    $('.battle-play').show().css('display', 'flex');
     //show the photo of the pokemon that was chosen
     $playersPokemonDiv.append($('<img>').attr('src', $playersPokemonImgSrc).addClass('players-pokemon-photo'))
     //show the name of the current pokemon
@@ -72,10 +82,42 @@ $(()=>{
           for(let k = 0; k<moveArray.length; k++){
             $('.players-pokemon').append($('<div>').text(moveArray[k]).addClass('pokemon-move'))
           } //end of this for loop
+          //display the starting XP for the pokemon
           let pokemonXP = data.base_experience;
-          $('.players-pokemon').append(pokemonXP)
+          let displayXP = "XP: "+ pokemonXP
+          $('.players-pokemon').append(displayXP)
       })
-  };
+  }; //end of the createPlayersPokemonArea function
+
+  const createOpponentPokemonArea = () => {
+    
+
+    //pull information about the players current pokemon
+    $.ajax ({
+      url:'https://pokeapi.co/api/v2/pokemon/caterpie'
+    }).then(
+      (data)=> {
+        //loop through moves array and find the ones that have version group name "red-blue" && starter level 1
+        for(let i = 0; i<data.moves.length; i++){
+          let array1 = data.moves[i].version_group_details
+          let versionLength = data.moves[i].version_group_details.length;
+            for(let j = 0; j<versionLength; j++){
+              if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 9)) {
+                let move = data.moves[i].move.name;
+                oppMoveArray.push(move)
+              };
+            }
+          } //end of the for loop
+          //go through and list the attacks for this pokemon
+          for(let k = 0; k<oppMoveArray.length; k++){
+            $('.action-area').append($('<div>').text(oppMoveArray[k]).addClass('pokemon-move'))
+          } //end of this for loop
+          //display the starting XP for the pokemon
+          opponentXP = data.base_experience;
+          let oppDisplayXP = "XP: "+ opponentXP
+          $('.action-area').append(oppDisplayXP)
+      })
+  }
 
 
 }) //closing tag for page load function
