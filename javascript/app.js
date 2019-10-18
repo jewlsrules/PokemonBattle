@@ -3,7 +3,8 @@ $(()=>{
 
   $('.pokemon-picker').on('click', (event)=> {
     let $pokemonName = $(event.currentTarget).children('img').attr('id')
-    console.log($pokemonName);
+    let $pokemonModal = $(event.currentTarget).children('div')
+    $pokemonModal.toggle();
     $.ajax ({
       url:'https://pokeapi.co/api/v2/pokemon/'+$pokemonName,
     }).then(
