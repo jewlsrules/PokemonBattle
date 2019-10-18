@@ -2,7 +2,9 @@ $(()=>{
 
   const $choosePokemon = $('.choose-pokemon')
   let $clickToPick = $('.click-to-pick')
-  let playersPokemon
+  let playersCurrentPokemon
+  let $playersPokemonDiv = $('.players-pokemon')
+  let $playersPokemonImgSrc
 
   //click function for choosing your pokemon
   $('.poke-picture').on('click', (event)=> {
@@ -31,17 +33,20 @@ $(()=>{
     //retrieve the name of the pokemon that was clicked on
     let $clickParent = $(event.target).parent().parent();
     let $pokemonName = $clickParent.children('.poke-picture').children('img').attr('id')
-    //confirm that that's the pokemon they want to pick
-    let result = confirm('Are you sure you want to pick '+$pokemonName+"?")
-    //if the player confirms, hide the pokemon selector and move on to the game
-    if(result){
-      $choosePokemon.hide();
-      //change the player's pokemon to the one that was chosen.
-      playersPokemon = $pokemonName
-      console.log(playersPokemon);
-    }
+    //when a player selects a pokemon, it should hide the picker area
+    $choosePokemon.hide();
+    //change the player's pokemon to the one that was chosen.
+    playersCurrentPokemon = $pokemonName
+    //get the url of the current pokemon's photo to display in the battle area div
+    $playersPokemonImgSrc = $clickParent.children('.poke-picture').children('img').attr('src');
+    createPlayersPokemonArea();
+
   })
 
+  const createPlayersPokemonArea = () => {
+    $('.battle-play').show();
+    $playersPokemonDiv.append($('<div>').text(playersCurrentPokemon))
+  };
 
 
-})
+}) //closing tag for page load function
