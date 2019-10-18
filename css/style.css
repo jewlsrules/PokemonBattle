@@ -106,3 +106,19 @@ div img {
   text-align: center;
   font-size: 1.2em
 }
+
+.click-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#start-battle {
+  font-size: 2em;
+  text-align: center;
+  height: 50px;
+  color: white;
+  background-color: gray;
+  border: 1px solid black;
+  padding: 5px;
+}

@@ -24,6 +24,7 @@ $(()=>{
     levle: 2,
     reward: 35
   }]
+  let currentOpponentIndex = 0
   let opponentPokemon
   const oppMoveArray = [];
   let opponentXP
@@ -63,6 +64,7 @@ $(()=>{
     $playersPokemonImgSrc = $clickParent.children('.poke-picture').children('img').attr('src');
     createPlayersPokemonArea();
     createOpponentPokemonArea();
+    initializeBattle();
   })
 
   const createPlayersPokemonArea = () => {
@@ -105,7 +107,7 @@ $(()=>{
     $('.opponent-area').append($('<div>').text("Caterpie").addClass('current-pokemon-name'))
     //pull information about the players current pokemon
     $.ajax ({
-      url:'https://pokeapi.co/api/v2/pokemon/'+possOpponents[0].name
+      url:'https://pokeapi.co/api/v2/pokemon/'+possOpponents[currentOpponentIndex].name
     }).then(
       (data)=> {
         console.log(data);
@@ -129,9 +131,13 @@ $(()=>{
           let oppDisplayXP = $('<div>').text("XP: "+ opponentXP).addClass('xp-stats')
           $('.opponent-area').append(oppDisplayXP)
       })
-  }// end of creating aopponent area function
+  }// end of creating opponent area function
 
-
-
-
+  //create the click area where the battle will happen.
+  const initializeBattle = () => {
+    let $desc = $('<div>').text('Beat the opponent\'s pokemon and get paid!')
+    let $battleStartButton = $('<div>').text('Start Battle').attr('id', 'start-battle')
+    $('.click-area').append($desc)
+    $('.click-area').append($battleStartButton)
+ }
 }) //closing tag for page load function
