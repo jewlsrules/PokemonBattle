@@ -1,11 +1,12 @@
 $(()=>{
 
-  let $pokemonModal = $('.modal')
+  // let $pokemonModal = $('.modal')
 
   //click function for choosing your pokemon
   $('.pokemon-picker').on('click', (event)=> {
     let $pokemonName = $(event.currentTarget).children('img').attr('id')
-    let $pokemonModal = $('.modal');
+    let $pokemonModal = $(event.currentTarget).children('.modal');
+    // let $pokemonModal = $('.modal');
 
     //toggle seeing the pokemon's information or not.
     $pokemonModal.toggle();
