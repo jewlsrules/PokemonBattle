@@ -105,7 +105,7 @@ $(()=>{
     $('.opponent-area').append($('<div>').text("Caterpie").addClass('current-pokemon-name'))
     //pull information about the players current pokemon
     $.ajax ({
-      url:'https://pokeapi.co/api/v2/pokemon/caterpie'
+      url:'https://pokeapi.co/api/v2/pokemon/'+possOpponents[0].name
     }).then(
       (data)=> {
         console.log(data);
