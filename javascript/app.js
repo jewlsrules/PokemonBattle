@@ -15,7 +15,7 @@ $(()=>{
 
   //opponent information
   let opponentPokemon
-  let oppMoveArray = [];
+  const oppMoveArray = [];
   let opponentXP
 
   //click function for choosing your pokemon
@@ -52,7 +52,7 @@ $(()=>{
     //get the url of the current pokemon's photo to display in the battle area div
     $playersPokemonImgSrc = $clickParent.children('.poke-picture').children('img').attr('src');
     createPlayersPokemonArea();
-
+    createOpponentPokemonArea();
   })
 
   const createPlayersPokemonArea = () => {
@@ -84,25 +84,27 @@ $(()=>{
           } //end of this for loop
           //display the starting XP for the pokemon
           let pokemonXP = data.base_experience;
-          let displayXP = "XP: "+ pokemonXP
+          let displayXP = $('<div>').text("XP: "+ pokemonXP).addClass('xp-stats')
           $('.players-pokemon').append(displayXP)
       })
   }; //end of the createPlayersPokemonArea function
 
   const createOpponentPokemonArea = () => {
-    
-
+    let caterpiePicture = $('<img>').attr('src', 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/010.png').addClass('players-pokemon-photo')
+    $('.opponent-area').append(caterpiePicture)
+    $('.opponent-area').append($('<div>').text("Caterpie").addClass('current-pokemon-name'))
     //pull information about the players current pokemon
     $.ajax ({
       url:'https://pokeapi.co/api/v2/pokemon/caterpie'
     }).then(
       (data)=> {
+        console.log(data);
         //loop through moves array and find the ones that have version group name "red-blue" && starter level 1
         for(let i = 0; i<data.moves.length; i++){
           let array1 = data.moves[i].version_group_details
           let versionLength = data.moves[i].version_group_details.length;
             for(let j = 0; j<versionLength; j++){
-              if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 9)) {
+              if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 1)) {
                 let move = data.moves[i].move.name;
                 oppMoveArray.push(move)
               };
@@ -110,12 +112,12 @@ $(()=>{
           } //end of the for loop
           //go through and list the attacks for this pokemon
           for(let k = 0; k<oppMoveArray.length; k++){
-            $('.action-area').append($('<div>').text(oppMoveArray[k]).addClass('pokemon-move'))
+            $('.opponent-area').append($('<div>').text(oppMoveArray[k]).addClass('pokemon-move'))
           } //end of this for loop
           //display the starting XP for the pokemon
           opponentXP = data.base_experience;
-          let oppDisplayXP = "XP: "+ opponentXP
-          $('.action-area').append(oppDisplayXP)
+          let oppDisplayXP = $('<div>').text("XP: "+ opponentXP).addClass('xp-stats')
+          $('.opponent-area').append(oppDisplayXP)
       })
   }
 

@@ -56,6 +56,7 @@ div img {
 .battle-play {
   display: none;
   flex-direction: row;
+  justify-content: space-between;
 }
 
 .players-pokemon {
@@ -69,8 +70,8 @@ div img {
 
 .players-pokemon-photo {
   align-self: center;
-  width: 80%;
-  height: 60%;
+  width: 250px;
+  height: 250px;
 }
 
 .current-pokemon-name {
@@ -83,12 +84,26 @@ div img {
 
 .pokemon-move {
   color: white;
-  text-align: left;
-  width: 100%;
-  padding-left: 20%;
+  text-align: center;
+  width: 25%;
+  margin: 3% 10%;
+  font-size: 1.2em;
+  background: gray;
+  padding: 5px;
+
 }
 
-.action-area {
-  width: 65%;
+.opponent-area {
+  width: 30%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   border: 1px solid black;
+  border-radius: 3px;
+}
+
+.xp-stats {
+  width: 100%;
+  text-align: center;
+  font-size: 1.2em
 }
