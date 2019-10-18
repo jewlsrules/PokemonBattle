@@ -11,6 +11,7 @@ body {
 .pokemon-picker {
   width: 30%;
   max-height: 200px;
+  position: relative;
 }
 
 div img {
@@ -20,7 +21,7 @@ div img {
 
 .modal {
 	background-color: rgba(0,0,0,0.4);
-  position: static;
+  position: absolute;
 	top: 0;
 	left: 0; */
 	height: 100%;
