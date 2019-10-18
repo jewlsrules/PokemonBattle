@@ -14,6 +14,16 @@ $(()=>{
   let losses = 0;
 
   //opponent information
+  let possOpponents = [{
+    name: 'caterpie',
+    level: 1,
+    reward: 20
+  },
+  {
+    name: 'pikachu',
+    levle: 2,
+    reward: 35
+  }]
   let opponentPokemon
   const oppMoveArray = [];
   let opponentXP
@@ -119,7 +129,9 @@ $(()=>{
           let oppDisplayXP = $('<div>').text("XP: "+ opponentXP).addClass('xp-stats')
           $('.opponent-area').append(oppDisplayXP)
       })
-  }
+  }// end of creating aopponent area function
+
+
 
 
 }) //closing tag for page load function

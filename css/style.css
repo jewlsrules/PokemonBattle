@@ -60,7 +60,7 @@ div img {
 }
 
 .players-pokemon {
-  width: 30%;
+  width: 400px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -90,11 +90,10 @@ div img {
   font-size: 1.2em;
   background: gray;
   padding: 5px;
-
 }
 
 .opponent-area {
-  width: 30%;
+  width: 400px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
