@@ -6,6 +6,7 @@ $(()=>{
   let $playersPokemonDiv = $('.players-pokemon')
   let $playersPokemonImgSrc;
   const moveArray = [];
+  let pokemonXP
 
   //click function for choosing your pokemon
   $('.poke-picture').on('click', (event)=> {
@@ -67,10 +68,12 @@ $(()=>{
               };
             }
           } //end of the for loop
-          console.log(moveArray);
+          //go through and list the attacks for this pokemon
           for(let k = 0; k<moveArray.length; k++){
             $('.players-pokemon').append($('<div>').text(moveArray[k]).addClass('pokemon-move'))
-          }
+          } //end of this for loop
+          let pokemonXP = data.base_experience;
+          $('.players-pokemon').append(pokemonXP)
       })
   };
 

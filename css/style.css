@@ -76,4 +76,12 @@ div img {
   text-align: center;
   text-transform: capitalize;
   font-size: 2em;
+  width: 100%;
+}
+
+.pokemon-move {
+  color: white;
+  text-align: left;
+  width: 100%;
+  padding-left: 20%;
 }
