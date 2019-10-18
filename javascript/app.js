@@ -1,6 +1,6 @@
 $(()=>{
 
-
+  const $choosePokemon = $('.choose-pokemon')
   let $clickToPick = $('.click-to-pick')
 
   //click function for choosing your pokemon
@@ -30,7 +30,10 @@ $(()=>{
     let $clickParent = $(event.target).parent().parent();
     let $pokemonName = $clickParent.children('.poke-picture').children('img').attr('id')
     console.log($pokemonName);
-    alert('Are you sure you want to pick '+$pokemonName+"?")
+    let result = confirm('Are you sure you want to pick '+$pokemonName+"?")
+    if(result){
+      $choosePokemon.hide();
+    }
   })
 
 })
