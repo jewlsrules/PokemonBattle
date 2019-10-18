@@ -1,3 +1,19 @@
 body {
-  background: red;
+  background: cornflowerblue;
+}
+
+.choose-pokemon {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.pokemon-picker {
+  width: 30%;
+  max-height: 200px;
+}
+
+div img {
+  width: 200px;
+  height: 200px;
 }

@@ -1,11 +1,14 @@
 $(()=>{
 
-  $.ajax ({
-    url:'https://pokeapi.co/api/v2/pokemon/ditto',
-  }).then(
-    (data)=> {
-      console.log(data);
-    }
-  )
+
+  $('#charmander').on('click', (event)=> {
+    $.ajax ({
+      url:'https://pokeapi.co/api/v2/pokemon/ditto',
+    }).then(
+      (data)=> {
+        console.log(data);
+      }
+    )
+  })
 
 })
