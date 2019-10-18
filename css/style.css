@@ -56,3 +56,24 @@ div img {
 .battle-play {
   display: none;
 }
+
+.players-pokemon {
+  width: 30%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+.players-pokemon-photo {
+  align-self: center;
+  width: 80%;
+}
+
+.current-pokemon-name {
+  color: white;
+  text-align: center;
+  text-transform: capitalize;
+  font-size: 2em;
+}

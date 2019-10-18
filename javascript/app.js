@@ -5,6 +5,7 @@ $(()=>{
   let playersCurrentPokemon
   let $playersPokemonDiv = $('.players-pokemon')
   let $playersPokemonImgSrc
+  let moveArray = ['none'];
 
   //click function for choosing your pokemon
   $('.poke-picture').on('click', (event)=> {
@@ -44,8 +45,28 @@ $(()=>{
   })
 
   const createPlayersPokemonArea = () => {
+    //show the div that most of the game action will happen in.
     $('.battle-play').show();
-    $playersPokemonDiv.append($('<div>').text(playersCurrentPokemon))
+    //show the photo of the pokemon that was chosen
+    $playersPokemonDiv.append($('<img>').attr('src', $playersPokemonImgSrc).addClass('players-pokemon-photo'))
+    //show the name of the current pokemon
+    $playersPokemonDiv.append($('<div>').text(playersCurrentPokemon).addClass('current-pokemon-name'))
+    //pull information about the players current pokemon
+    $.ajax ({
+      url:'https://pokeapi.co/api/v2/pokemon/'+playersCurrentPokemon,
+    }).then(
+      (data)=> {
+        //loop through moves array and find the ones that have version group name "red-blue" && starter level 1
+        for(let i = 0; i<data.moves.length; i++){
+          let array1 = data.moves[i].version_group_details
+          let versionLength = data.moves[i].version_group_details.length;
+            for(let j = 0; j<versionLength; j++){
+              if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 1)) {
+                // moveArray.push(data.moves[i].move.name);
+              };
+            }
+          }
+      })
   };
 
 
