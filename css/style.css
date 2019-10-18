@@ -10,22 +10,39 @@ body {
 
 .pokemon-picker {
   width: 30%;
+  max-width: 300px;
   max-height: 200px;
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 div img {
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
 }
 
 .modal {
-	background-color: rgba(0,0,0,0.4);
+	background-color: rgba(0,0,0,0.7);
+  color: white;
+  padding-left: 10px;
   position: absolute;
-	top: 0;
+	top: 25px;
 	left: 0; */
 	height: 100%;
 	width: 100%;
 	z-index: 1;
   display: none;
+}
+
+.poke-type {
+  text-transform: capitalize;
+}
+
+.click-to-pick {
+  background: gray;
+  border: 1px solid black;
+  border-radius: 5px;
+  color: white;
 }
