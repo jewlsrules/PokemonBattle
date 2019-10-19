@@ -258,8 +258,20 @@ $(()=>{
 
 //player wins function
   const playerWins = () => {
-    $('.click-area').children().hide()
+    //hide the battle area to display the win information
+    $('.click-area').children().hide();
+    //win display information
+    let $youWinAlert = $('<div>').text('You beat '+possOpponents[currentOpponentIndex].name+'! You earned '+possOpponents[currentOpponentIndex].reward+' coins. Great job!').addClass('winDiv');
+    $('.click-area').append($youWinAlert)
+    //add the reward type to the player's bank
+    playersBank = playersBank + parseInt(possOpponents[currentOpponentIndex].reward)
+    console.log('the player now has '+playersBank+' coins');
+    //change the opponent's pokemon to the next in the array
+    currentOpponentIndex++
   }
+
+//next battle function
+
 
 
 }) //closing tag for page load function
