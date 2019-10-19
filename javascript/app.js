@@ -23,6 +23,7 @@ $(()=>{
   let wins = 0;
   let losses = 0;
   let moveApiUrl = " "
+  let playersBank = 0;
 
   //opponent information
   let possOpponents = [{
@@ -188,6 +189,7 @@ $(()=>{
     $attackButton2.on('click', (event)=> {
      let attackClickedName = event.target.innerText
      // console.log(event.target.innerText);
+     //this ajax call is to get the url for the attack, which will be used in the $getAttackStats function in another ajax call
      $.ajax ({
        url:'https://pokeapi.co/api/v2/move/?offset=0&limit=800'
         }).then(
@@ -207,17 +209,22 @@ $(()=>{
  // update opponent's xp display function
  const updateOppXP = () => {
   $('#oppXpStat').text('XP: '+opponentXP);
+  //ths will make it so that the opponent's turn is next
+  playersTurn = false
  }
 
+ //if the opponent's XP is 0 or less, it will display that they've fainted
  const opponentWasDefeatedDisplayUpdate = () => {
    $('#oppXpStat').text('The Pokemon Fainted!');
  }
 
  //function to check if opponent's XP is at 0 or less
  const checkForOppDefeat = () => {
+   //if the opponent's xp is below 0, we will declare the player to be the winner
    if(opponentXP <= 0){
-     console.log('You defeated '+opponentPokemon);
      opponentWasDefeatedDisplayUpdate();
+     playerWins();
+     //if the opponent still has XP, we will update the display and change the turn
    } else {
       updateOppXP();
    }
@@ -227,6 +234,7 @@ $(()=>{
  //this is nested inside of the click function for when a player chooses an attack
  const $getAttackStats = (url) => {
    $.ajax ({
+     //we get the url from the attack button click listener
      url: url
    }).then(
      (data) => {
@@ -241,12 +249,17 @@ $(()=>{
          //function to update the display of the opponent's XP.
          checkForOppDefeat();
        } else {
-         console.log('The attack had no effect');
+         //if the attack has null power, it will not take away from opponent's xp
+         console.log('The attack had no effect!');
        }
      }
    )
  }
 
+//player wins function
+  const playerWins = () => {
+    $('.click-area').children().hide()
+  }
 
 
 }) //closing tag for page load function
