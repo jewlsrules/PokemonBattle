@@ -38,9 +38,9 @@ $(()=>{
     xp: 60
   }]
   let currentOpponentIndex = 0
-  let opponentPokemon = possOpponents[currentOpponentIndex]
+  let opponentPokemon = possOpponents[currentOpponentIndex].name
   const oppMoveArray = [];
-  let opponentXP
+  let opponentXP = possOpponents[currentOpponentIndex].xp
 
   //click function for choosing your pokemon
   $('.poke-picture').on('click', (event)=> {
@@ -140,8 +140,7 @@ $(()=>{
             $('.opponent-area').append($('<div>').text(oppMoveArray[k]).addClass('pokemon-move'))
           } //end of this for loop
           //display the starting XP for the pokemon
-          let oppXP = possOpponents[currentOpponentIndex].xp;
-          let oppDisplayXP = $('<div>').text("XP: "+ oppXP).addClass('xp-stats')
+          let oppDisplayXP = $('<div>').text("XP: "+ opponentXP).addClass('xp-stats').attr('id', 'oppXpStat')
           $('.opponent-area').append(oppDisplayXP)
       })
   }// end of creating opponent area function
@@ -185,6 +184,11 @@ $(()=>{
      })
  })
 
+ // update opponent's xp function
+ const updateOppXP = () => {
+  $('#oppXpStat').text('XP: '+opponentXP);
+ }
+
  //this will get the attack power from the API and reduce the opponent's XP by that much.
  const $getAttackStats = (url) => {
    $.ajax ({
@@ -192,19 +196,16 @@ $(()=>{
    }).then(
      (data) => {
        let attackInt = parseInt(data.power)
-       // console.log('this attack takes away xp: '+ attackInt);
-       // console.log('attack int is a'+ typeof(attackInt));
 
        let opponentXpInt = parseInt(possOpponents[currentOpponentIndex].xp)
-       // console.log('opponent\'s XP is at: '+opponentXpInt)
-       // console.log('opponentXpInt is a '+typeof(opponentXpInt));
 
        possOpponents[currentOpponentIndex].xp = opponentXpInt - attackInt
-       console.log(possOpponents[currentOpponentIndex].xp);
+       opponentXP = possOpponents[currentOpponentIndex].xp
+       console.log(opponentXP);
+       updateOppXP();
      }
    )
  }
-
 
 
 }) //closing tag for page load function
