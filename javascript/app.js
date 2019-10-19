@@ -4,13 +4,7 @@
      name: "charmander",
      xp: 0,
      attacks:
-       [{
-         attackName: "placeholder1",
-         power: 0
-       }, {
-         attackName: "placeholder2",
-         power: 0
-       }]
+       []
      }],
    bank: 0,
    wins: 0,
@@ -59,14 +53,22 @@ $(()=>{
   const oppMoveArray = [];
   let opponentXP = possOpponents[currentOpponentIndex].xp
 
-  //click function for choosing your pokemon
+
+  ////////////////////////////
+  //Game Play Functions
+  ////////////////////////////
+
+
+  ////////////////////////////
+  //Game Set Up
+  ////////////////////////////
+
+  //click function for seeing additional Pokemon information
   $('.poke-picture').on('click', (event)=> {
     let $pokemonName = $(event.currentTarget).children('img').attr('id')
     let $pokemonModal = $(event.currentTarget).children('.modal');
-
     //toggle seeing the pokemon's information or not.
     $pokemonModal.toggle();
-
     //api pull to get pokemon information for only the pokemon that was clicked
     $.ajax ({
       url:'https://pokeapi.co/api/v2/pokemon/'+$pokemonName,
@@ -74,7 +76,6 @@ $(()=>{
       (data)=> {
         let $pokemonName = data.name
         let $pokemonXP = data.base_experience
-
         //put the data from the api into the modal.
         $('.poke-type').text($pokemonName)
         $('.poke-xp').text($pokemonXP)
@@ -97,39 +98,55 @@ $(()=>{
               let array1 = data.moves[i].version_group_details
               let versionLength = data.moves[i].version_group_details.length;
                 for(let j = 0; j<versionLength; j++){
+                  //only find moves from red & blue original games
                   if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 1)) {
                     let moveName = data.moves[i].move.name;
-                    //***THIS NEEDS TO BE CHANGED!!!***
-                    player.pokemon[0].attacks.push(moveName)
+                    // let moveForAttackArray = {attackName: data.moves[i].move.name};
+                    // // this will push the name of the attack into the attack array
+                    // player.pokemon[0].attacks.push(moveForAttackArray)
+                    findAttackID(moveName)
                   };
                 }
               } //end of the for loop
         console.log(player);
     })
     // when a player selects a pokemon, it should hide the picker area
-    // $choosePokemon.hide();
+    $choosePokemon.hide();
   })
 
-  // //function to pull ajax
-  // const getPokemonInfo = () => {
-  //   $.ajax ({
-  //     url:'https://pokeapi.co/api/v2/pokemon/'+ $chosenPokemonName,
-  //   }).then(
-  //     (data)=> {
-  //       player.pokemon[0].name = data.name
-  //       player.pokemon[0].xp = data.base_experience
-  //       //loop through moves array and find the ones that have version group name "red-blue" && starter level 1
-  //       for(let i = 0; i<data.moves.length; i++){
-  //         let array1 = data.moves[i].version_group_details
-  //         let versionLength = data.moves[i].version_group_details.length;
-  //           for(let j = 0; j<versionLength; j++){
-  //             if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 1)) {
-  //               let move = data.moves[i].move.name;
-  //               player.pokemon[0].attacks.push(move)
-  //             };
-  //           }
-  //         } //end of the for loop
-  // }
+  const findAttackID = (attack) => {
+    console.log('starting findAttackID function, looking for '+attack);
+    $.ajax ({
+      url:'https://pokeapi.co/api/v2/move/?offset=0&limit=800'
+       }).then(
+         (data)=> {
+           let resultsLength = data.results.length
+           console.log('find attack ID returned this many results: '+resultsLength);
+           for(let i=0;i<resultsLength;i++){
+             if (data.results[i].name === attack) {
+               moveApiUrl = data.results[i].url;
+               console.log('url for '+attack+'found: '+moveApiUrl);
+               $getAttackStats(moveApiUrl);
+               return;
+             }
+           }
+      })
+  }
+
+  const $getAttackStats = (url) => {
+    $.ajax ({
+      //we get the url from the attack button click listener
+      url: url
+    }).then(
+      (data) => {
+          //get the attack power base & turn it into an integer
+          let attackInt = parseInt(data.power)
+          console.log('finding the data for '+ data.name + '. power is: ' + data.power);
+          //push attack information into player's pokemon's attack array
+          player.pokemon[0].attacks.push({attackName: data.name, power: attackInt})
+      }
+    )
+  }
 
     //get the url of the current pokemon's photo to display in the battle area div
   //   $playersPokemonImgSrc = $(event.currentTarget).parent().children('.poke-picture').children('img').attr('src');
@@ -287,31 +304,31 @@ $(()=>{
    }
  }
 
- //this will get the attack power from the API and reduce the opponent's XP by that much.
- //this is nested inside of the click function for when a player chooses an attack
- const $getAttackStats = (url) => {
-   $.ajax ({
-     //we get the url from the attack button click listener
-     url: url
-   }).then(
-     (data) => {
-       if(data.power){
-         //get the attack power base & turn it into an integer
-         let attackInt = parseInt(data.power)
-         //turns the current xp into an integer
-         let opponentXpInt = parseInt(possOpponents[currentOpponentIndex].xp)
-         //get the resulting xp after the attack and update the object
-         possOpponents[currentOpponentIndex].xp = opponentXpInt - attackInt
-         opponentXP = possOpponents[currentOpponentIndex].xp
-         //function to update the display of the opponent's XP.
-         checkForOppDefeat();
-       } else {
-         //if the attack has null power, it will not take away from opponent's xp
-         console.log('The attack had no effect!');
-       }
-     }
-   )
- }
+ // //this will get the attack power from the API and reduce the opponent's XP by that much.
+ // //this is nested inside of the click function for when a player chooses an attack
+ // const $getAttackStats = (url) => {
+ //   $.ajax ({
+ //     //we get the url from the attack button click listener
+ //     url: url
+ //   }).then(
+ //     (data) => {
+ //       if(data.power){
+ //         //get the attack power base & turn it into an integer
+ //         let attackInt = parseInt(data.power)
+ //         //turns the current xp into an integer
+ //         let opponentXpInt = parseInt(possOpponents[currentOpponentIndex].xp)
+ //         //get the resulting xp after the attack and update the object
+ //         possOpponents[currentOpponentIndex].xp = opponentXpInt - attackInt
+ //         opponentXP = possOpponents[currentOpponentIndex].xp
+ //         //function to update the display of the opponent's XP.
+ //         checkForOppDefeat();
+ //       } else {
+ //         //if the attack has null power, it will not take away from opponent's xp
+ //         console.log('The attack had no effect!');
+ //       }
+ //     }
+ //   )
+ // }
 
 //player wins function
   const playerWins = () => {
