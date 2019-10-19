@@ -5,11 +5,11 @@ $(()=>{
   let $clickToPick = $('.click-to-pick')
   let $playersPokemonDiv = $('.players-pokemon')
   let $battleStartButton = $('<div>').text('Start Battle').attr('id', 'start-battle')
-  let $attackButton1 = $('<div>')
-  let $attackButton2 = $('<div>')
+  let $attackButton1 = $('<div>').addClass('clickable')
+  let $attackButton2 = $('<div>').addClass('clickable')
   let renderInBattleAttacks = () => {
-      $('.click-area').append($attackButton1.text(moveArray[0]).addClass('pokemon-move clickable'));
-      $('.click-area').append($attackButton2.text(moveArray[1]).addClass('pokemon-move clickable'))
+      $('.click-area').append($attackButton1.text(moveArray[0]).addClass('pokemon-move'));
+      $('.click-area').append($attackButton2.text(moveArray[1]).addClass('pokemon-move'))
   }
 
   //game information & storage
@@ -140,8 +140,8 @@ $(()=>{
             $('.opponent-area').append($('<div>').text(oppMoveArray[k]).addClass('pokemon-move'))
           } //end of this for loop
           //display the starting XP for the pokemon
-          opponentXP = data.base_experience;
-          let oppDisplayXP = $('<div>').text("XP: "+ opponentXP).addClass('xp-stats')
+          let oppXP = possOpponents[currentOpponentIndex].xp;
+          let oppDisplayXP = $('<div>').text("XP: "+ oppXP).addClass('xp-stats')
           $('.opponent-area').append(oppDisplayXP)
       })
   }// end of creating opponent area function
@@ -166,7 +166,7 @@ $(()=>{
  })// end of battle start button click listener
 
  //player's pokemon attack chosen
- $attackButton1.on('click', (event)=> {
+  $attackButton1.on('click', (event)=> {
    let attackClickedName = event.target.innerText
    // console.log(event.target.innerText);
    $.ajax ({
@@ -185,18 +185,19 @@ $(()=>{
      })
  })
 
+ //this will get the attack power from the API and reduce the opponent's XP by that much.
  const $getAttackStats = (url) => {
    $.ajax ({
      url: url
    }).then(
      (data) => {
        let attackInt = parseInt(data.power)
-       console.log('this attack takes away xp: '+ attackInt);
-       console.log('attack int is a'+ typeof(attackInt));
+       // console.log('this attack takes away xp: '+ attackInt);
+       // console.log('attack int is a'+ typeof(attackInt));
 
        let opponentXpInt = parseInt(possOpponents[currentOpponentIndex].xp)
-       console.log('opponent\'s XP is at: '+opponentXpInt)
-       console.log('opponentXpInt is a '+typeof(opponentXpInt));
+       // console.log('opponent\'s XP is at: '+opponentXpInt)
+       // console.log('opponentXpInt is a '+typeof(opponentXpInt));
 
        possOpponents[currentOpponentIndex].xp = opponentXpInt - attackInt
        console.log(possOpponents[currentOpponentIndex].xp);
