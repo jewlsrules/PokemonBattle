@@ -5,6 +5,12 @@ $(()=>{
   let $clickToPick = $('.click-to-pick')
   let $playersPokemonDiv = $('.players-pokemon')
   let $battleStartButton = $('<div>').text('Start Battle').attr('id', 'start-battle')
+  let $attackButton1 = $('<div>')
+  let $attackButton2 = $('<div>')
+  let renderInBattleAttacks = () => {
+      $('.click-area').append($attackButton1.text(moveArray[0]).addClass('pokemon-move clickable'));
+      $('.click-area').append($attackButton2.text(moveArray[1]).addClass('pokemon-move clickable'))
+  }
 
   //game information & storage
   let playersTurn = true
@@ -153,10 +159,24 @@ $(()=>{
    $('.click-area').append($playerGoesFirstDiv)
    $('.click-area').append($pickAnAttack)
 
-   for(let k = 0; k<moveArray.length; k++){
-     $('.click-area').append($('<div>').text(moveArray[k]).addClass('pokemon-move clickable'))
-   }
- })
+   renderInBattleAttacks();
+ })// end of battle start button click listener
 
+ //player's pokemon attack chosen
+ $attackButton1.on('click', (event)=> {
+   let attackClickedName = event.target.innerText
+   // console.log(event.target.innerText);
+   $.ajax ({
+     url:'https://pokeapi.co/api/v2/move/?offset=0&limit=800'
+      }).then(
+        (data)=> {
+          let resultsLength = data.results.length
+          for(let i=0;i<resultsLength;i++){
+            if (data.results[i].name === attackClickedName) {
+              console.log(data.results[i].url);
+            }
+          }
+     })
+ })
 
 }) //closing tag for page load function
