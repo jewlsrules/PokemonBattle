@@ -184,28 +184,41 @@ $(()=>{
      })
  })
 
- // update opponent's xp function
+ // update opponent's xp display function
  const updateOppXP = () => {
   $('#oppXpStat').text('XP: '+opponentXP);
  }
 
+ //function to check if opponent's XP is at 0 or less
+ const checkForOppDefeat = () => {
+   if(opponentXP <= 0){
+     console.log('You defeated '+opponentPokemon);
+     $('#appXpStat').text(opponentPokemon+' fained!')
+   } else {
+      updateOppXP();
+   }
+ }
+
  //this will get the attack power from the API and reduce the opponent's XP by that much.
+ //this is nested inside of the click function for when a player chooses an attack
  const $getAttackStats = (url) => {
    $.ajax ({
      url: url
    }).then(
      (data) => {
+       //get the attack power base & turn it into an integer
        let attackInt = parseInt(data.power)
-
+       //turns the current xp into an integer
        let opponentXpInt = parseInt(possOpponents[currentOpponentIndex].xp)
-
+       //get the resulting xp after the attack and update the object
        possOpponents[currentOpponentIndex].xp = opponentXpInt - attackInt
        opponentXP = possOpponents[currentOpponentIndex].xp
-       console.log(opponentXP);
-       updateOppXP();
+       //function to update the display of the opponent's XP.
+       checkForOppDefeat();
      }
    )
  }
+
 
 
 }) //closing tag for page load function
