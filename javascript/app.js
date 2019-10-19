@@ -182,7 +182,27 @@ $(()=>{
             }
           }
      })
- })
+   })//end of attack button 1 function
+
+   //player's pokemon attack chosen
+    $attackButton2.on('click', (event)=> {
+     let attackClickedName = event.target.innerText
+     // console.log(event.target.innerText);
+     $.ajax ({
+       url:'https://pokeapi.co/api/v2/move/?offset=0&limit=800'
+        }).then(
+          (data)=> {
+            let resultsLength = data.results.length
+            for(let i=0;i<resultsLength;i++){
+              if (data.results[i].name === attackClickedName) {
+                moveApiUrl = data.results[i].url;
+                console.log(moveApiUrl);
+                $getAttackStats(moveApiUrl);
+                return;
+              }
+            }
+       })
+     })//end of attack button 2 function
 
  // update opponent's xp display function
  const updateOppXP = () => {
@@ -210,15 +230,19 @@ $(()=>{
      url: url
    }).then(
      (data) => {
-       //get the attack power base & turn it into an integer
-       let attackInt = parseInt(data.power)
-       //turns the current xp into an integer
-       let opponentXpInt = parseInt(possOpponents[currentOpponentIndex].xp)
-       //get the resulting xp after the attack and update the object
-       possOpponents[currentOpponentIndex].xp = opponentXpInt - attackInt
-       opponentXP = possOpponents[currentOpponentIndex].xp
-       //function to update the display of the opponent's XP.
-       checkForOppDefeat();
+       if(data.power){
+         //get the attack power base & turn it into an integer
+         let attackInt = parseInt(data.power)
+         //turns the current xp into an integer
+         let opponentXpInt = parseInt(possOpponents[currentOpponentIndex].xp)
+         //get the resulting xp after the attack and update the object
+         possOpponents[currentOpponentIndex].xp = opponentXpInt - attackInt
+         opponentXP = possOpponents[currentOpponentIndex].xp
+         //function to update the display of the opponent's XP.
+         checkForOppDefeat();
+       } else {
+         console.log('The attack had no effect');
+       }
      }
    )
  }
