@@ -13,6 +13,60 @@
    turn: true,
  };
 
+ //opponent information
+ let possOpponents = [{
+   name: 'caterpie',
+   photoUrl: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/010.png',
+   level: 1,
+   reward: 20,
+   xp: 39,
+   attacks: [{
+       attackName: 'tackle',
+       power: 20,
+       liklihood: .25
+     },
+     {
+       attackName: 'string-shot',
+       power: 0,
+       liklihood: .75
+     }]
+ },
+ {
+   name: 'pidgey',
+   photoUrl: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/016.png',
+   level: 2,
+   reward: 30,
+   xp: 50,
+   attacks: [{
+       attackName: 'razor-wind',
+       power: 30,
+       liklihood: .4
+     },
+     {
+       attackName: 'gust',
+       power: 5,
+       liklihood: .6
+     }]
+ },
+ {
+   name: 'pikachu',
+   photoUrl: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png',
+   level: 3,
+   reward: 40,
+   xp: 60,
+   attacks: [{
+       attackName: 'mega-punch',
+       power: 35,
+       liklihood: .5
+     },
+     {
+       attackName: 'pay-day',
+       power: 10,
+       liklihood: .5
+     }]
+ },
+ ];
+
 //on load
 $(()=>{
 
@@ -37,24 +91,11 @@ $(()=>{
   let tempPokemonConfirmName;
   let tempPower
 
-  //opponent information
-  let possOpponents = [{
-    name: 'caterpie',
-    level: 1,
-    reward: 20,
-    xp: 39
-  },
-  {
-    name: 'pikachu',
-    levle: 2,
-    reward: 35,
-    xp: 60
-  }];
-
   let currentOpponentIndex = 0;
   let opponentPokemon = possOpponents[currentOpponentIndex].name;
   const oppMoveArray = [];
   let opponentXP = possOpponents[currentOpponentIndex].xp;
+  let opponentChosenAttack
 
 
   ////////////////////////////
@@ -94,7 +135,7 @@ $(()=>{
       url:'https://pokeapi.co/api/v2/pokemon/'+ $chosenPokemonName,
     }).then(
       (data)=> {
-        //update the player's object with the pokemon's name and base xp
+        //update the player's object with the pokemon's name, base xp, & pokedex #
         player.pokemon[0].name = data.name;
         player.pokemon[0].xp = data.base_experience;
         player.pokemon[0].pokedexNum = data.id;
@@ -203,9 +244,9 @@ $(()=>{
   //this function will create the opponent's area with all the opponent pokemon's information
   const createOpponentPokemonArea = () => {
     //hardcoded for now, needs to be updated eventually
-    let caterpiePicture = $('<img>').attr('src', 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/010.png').addClass('players-pokemon-photo')
+    let caterpiePicture = $('<img>').attr('src', possOpponents[currentOpponentIndex].photoUrl).addClass('players-pokemon-photo')
     $('.opponent-area').append(caterpiePicture)
-    $('.opponent-area').append($('<div>').text("Caterpie").addClass('current-pokemon-name'))
+    $('.opponent-area').append($('<div>').text(possOpponents[currentOpponentIndex].name).addClass('current-pokemon-name'))
     //pull information about the players current pokemon
     $.ajax ({
       url:'https://pokeapi.co/api/v2/pokemon/'+possOpponents[currentOpponentIndex].name
@@ -266,14 +307,18 @@ $(()=>{
    console.log(attackClickedName);
    //find the attack in the player's pokemon moves array and return it's power.
    for(let i=0;i<player.pokemon[0].attacks.length;i++){
-     if(player.pokemon[0].attacks[i].attackName === attackClickedName) {
+     if(player.pokemon[0].attacks[i].attackName === attackClickedName && player.pokemon[0].attacks[i].power) {
        console.log('this attack does damage of: '+player.pokemon[0].attacks[i].power);
        tempPower = parseInt(player.pokemon[0].attacks[i].power)
-     }//end of if statement
+          //reduce the opponent's current pokemon's xp by the amount of power in the attack
+       possOpponents[currentOpponentIndex].xp = parseInt(possOpponents[currentOpponentIndex].xp) - tempPower
+     } else {
+       tempPower = 0
+       console.log('this attack doesn\'t do any damage');
+     }
+     //end of if statement
    }//end of for loop
    // console.log('temp power variable: '+tempPower);
-   //reduce the opponent's current pokemon's xp by the amount of power in the attack
-   possOpponents[currentOpponentIndex].xp = parseInt(possOpponents[currentOpponentIndex].xp) - tempPower
    console.log('opponent\'s XP is now '+ possOpponents[currentOpponentIndex].xp);
    checkForOppDefeat();
  }
@@ -305,15 +350,25 @@ $(()=>{
    console.log('now checking for opponent\'s defeat');
    //if the opponent's xp is below 0, we will declare the player to be the winner
    if(possOpponents[currentOpponentIndex].xp <= 0){
+     //display the xp for the opponent as fainted
      opponentWasDefeatedDisplayUpdate();
      playerWins();
      //if the opponent still has XP, we will update the display and change the turn
    } else {
+     console.log('opponent was not defeated, game on.');
+     //take away the attack buttons
+     $('.click-area').empty()
+     //find out how much damage was done and display it instead of attack buttons
+     let $damageReport = $('<div>').text('Your attack did '+tempPower+' damage');
+     $('.click-area').append($damageReport);
+     //update the xp display for the opponent
       updateOppXP();
+      //go on to the opponent's attack
+      opponentAttack();
    }
- }
+ }//end of check for OppDefeat function
 
-//player wins function
+  //player wins function
   const playerWins = () => {
     //hide the battle area to display the win information
     $('.click-area').children().hide();
@@ -325,9 +380,29 @@ $(()=>{
     console.log('the player now has '+player.bank+' coins');
     //change the opponent's pokemon to the next in the array
     currentOpponentIndex++
-  }
+  }//end of playerWins function
 
-//next battle function
+  //opponent attack Function
+  const opponentAttack = () => {
+    console.log('oppenent is attacking');
+    //create a random number to choose opponent's attack based on liklihood
+    let attackChooser = Math.random()
+    // console.log('randomly generated number: '+attackChooser);
+    // console.log('likelihood of first attack: '+possOpponents[currentOpponentIndex].attacks[0].liklihood);
+    //based on random number & each move's likelihood of happening, pick an attack
+    if(attackChooser < possOpponents[currentOpponentIndex].attacks[0].liklihood){
+      // console.log(possOpponents[currentOpponentIndex].name + ' attacked with 1st attack: '+possOpponents[currentOpponentIndex].attacks[0].attackName);
+      //reduce player's pokemon by the amount of the attack
+      opponentChosenAttack = possOpponents[currentOpponentIndex].attacks[0].attackName;
+      player.pokemon[0].xp = player.pokemon[0].xp - possOpponents[currentOpponentIndex].attacks[0].power;
+    } else {
+      // console.log(possOpponents[currentOpponentIndex].name + ' attacked with 2nd attack:  '+possOpponents[currentOpponentIndex].attacks[1].attackName);
+      player.pokemon[0].xp = player.pokemon[0].xp - possOpponents[currentOpponentIndex].attacks[1].power;
+      opponentChosenAttack = possOpponents[currentOpponentIndex].attacks[1].attackName;
+    } //end of if statement
+    console.log('oponent used '+ opponentChosenAttack);
+    console.log('your pokemon now has ' + player.pokemon[0].xp+' xp left');
+  }//end of opponentAttack function
 
 
 
