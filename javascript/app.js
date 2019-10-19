@@ -189,11 +189,15 @@ $(()=>{
   $('#oppXpStat').text('XP: '+opponentXP);
  }
 
+ const opponentWasDefeatedDisplayUpdate = () => {
+   $('#oppXpStat').text('The Pokemon Fainted!');
+ }
+
  //function to check if opponent's XP is at 0 or less
  const checkForOppDefeat = () => {
    if(opponentXP <= 0){
      console.log('You defeated '+opponentPokemon);
-     $('#appXpStat').text(opponentPokemon+' fained!')
+     opponentWasDefeatedDisplayUpdate();
    } else {
       updateOppXP();
    }
