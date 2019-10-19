@@ -362,6 +362,8 @@ $(()=>{
 
   //opponent attack Function
   const opponentAttack = () => {
+    let $opponentAttackedDiv = $('<div>').addClass('opponent-attack-text')
+    $('.click-area').append($opponentAttackedDiv)
     console.log('oppenent is attacking');
     //create a random number to choose opponent's attack based on liklihood
     let attackChooser = Math.random()
@@ -378,7 +380,8 @@ $(()=>{
       player.pokemon[0].xp = player.pokemon[0].xp - possOpponents[currentOpponentIndex].attacks[1].power;
       opponentChosenAttack = possOpponents[currentOpponentIndex].attacks[1].attackName;
     } //end of if statement
-    console.log('oponent used '+ opponentChosenAttack);
+    $opponentAttackedDiv.append('<h2>').text(possOpponents[currentOpponentIndex].name+' attacked '+ player.pokemon[0].name+" using "+opponentChosenAttack +"!")
+    console.log('opponent used '+ opponentChosenAttack);
     console.log('your pokemon now has ' + player.pokemon[0].xp+' xp left');
   }//end of opponentAttack function
 

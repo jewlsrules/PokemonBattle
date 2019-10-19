@@ -136,3 +136,8 @@ div img {
   border: 1px solid black;
   padding: 5px;
 }
+
+.opponent-attack-text {
+  text-align: center;
+  width: 100%;
+}
