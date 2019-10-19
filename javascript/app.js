@@ -28,12 +28,14 @@ $(()=>{
   let possOpponents = [{
     name: 'caterpie',
     level: 1,
-    reward: 20
+    reward: 20,
+    xp: 39
   },
   {
     name: 'pikachu',
     levle: 2,
-    reward: 35
+    reward: 35,
+    xp: 60
   }]
   let currentOpponentIndex = 0
   let opponentPokemon = possOpponents[currentOpponentIndex]
@@ -155,7 +157,7 @@ $(()=>{
  $battleStartButton.on('click', ()=>{
    $battleStartButton.hide();
    let $playerGoesFirstDiv = $('<div>').text('Go '+playersCurrentPokemon+"!")
-   let $pickAnAttack = $('<div>').text('What do you want '+playersCurrentPokemon+' to do?')
+   let $pickAnAttack = $('<div>').text('What attack do you want '+playersCurrentPokemon+' to do?')
 
    $('.click-area').append($playerGoesFirstDiv)
    $('.click-area').append($pickAnAttack)
@@ -188,7 +190,16 @@ $(()=>{
      url: url
    }).then(
      (data) => {
-       console.log(data);
+       let attackInt = parseInt(data.power)
+       console.log('this attack takes away xp: '+ attackInt);
+       console.log('attack int is a'+ typeof(attackInt));
+
+       let opponentXpInt = parseInt(possOpponents[currentOpponentIndex].xp)
+       console.log('opponent\'s XP is at: '+opponentXpInt)
+       console.log('opponentXpInt is a '+typeof(opponentXpInt));
+
+       possOpponents[currentOpponentIndex].xp = opponentXpInt - attackInt
+       console.log(possOpponents[currentOpponentIndex].xp);
      }
    )
  }
