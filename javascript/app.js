@@ -247,31 +247,9 @@ $(()=>{
     let caterpiePicture = $('<img>').attr('src', possOpponents[currentOpponentIndex].photoUrl).addClass('players-pokemon-photo')
     $('.opponent-area').append(caterpiePicture)
     $('.opponent-area').append($('<div>').text(possOpponents[currentOpponentIndex].name).addClass('current-pokemon-name'))
-    //pull information about the players current pokemon
-    $.ajax ({
-      url:'https://pokeapi.co/api/v2/pokemon/'+possOpponents[currentOpponentIndex].name
-    }).then(
-      (data)=> {
-        console.log(data);
-        //loop through moves array and find the ones that have version group name "red-blue" && starter level 1
-        for(let i = 0; i<data.moves.length; i++){
-          let array1 = data.moves[i].version_group_details
-          let versionLength = data.moves[i].version_group_details.length;
-            for(let j = 0; j<versionLength; j++){
-              if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 1)) {
-                let move = data.moves[i].move.name;
-                oppMoveArray.push(move)
-              };
-            }
-          } //end of the for loop
-          //go through and list the attacks for this pokemon
-          for(let k = 0; k<oppMoveArray.length; k++){
-            $('.opponent-area').append($('<div>').text(oppMoveArray[k]).addClass('pokemon-move'))
-          } //end of this for loop
-          //display the starting XP for the pokemon
-          let oppDisplayXP = $('<div>').text("XP: "+ opponentXP).addClass('xp-stats').attr('id', 'oppXpStat')
-          $('.opponent-area').append(oppDisplayXP)
-      })
+    //display the starting XP for the pokemon
+    let oppDisplayXP = $('<div>').text("XP: "+ possOpponents[currentOpponentIndex].xp).addClass('xp-stats').attr('id', 'oppXpStat')
+    $('.opponent-area').append(oppDisplayXP)
   }// end of creating opponent area function
 
   //create the click area where the battle will happen.
@@ -359,7 +337,7 @@ $(()=>{
      //take away the attack buttons
      $('.click-area').empty()
      //find out how much damage was done and display it instead of attack buttons
-     let $damageReport = $('<div>').text('Your attack did '+tempPower+' damage');
+     let $damageReport = $('<h2>').text('Your attack did '+tempPower+' damage!');
      $('.click-area').append($damageReport);
      //update the xp display for the opponent
       updateOppXP();
