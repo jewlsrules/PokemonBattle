@@ -108,9 +108,11 @@ div img {
 }
 
 .click-area {
+  width: 500px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  padding: 15px;
 }
 
 #start-battle {

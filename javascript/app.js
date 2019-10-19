@@ -1,9 +1,13 @@
 $(()=>{
 
-  //basic game information
+  //basic layout set up
   const $choosePokemon = $('.choose-pokemon')
   let $clickToPick = $('.click-to-pick')
   let $playersPokemonDiv = $('.players-pokemon')
+  let $battleStartButton = $('<div>').text('Start Battle').attr('id', 'start-battle')
+
+  //game information & storage
+  let playersTurn = true
 
  //players information
   let playersCurrentPokemon
@@ -25,7 +29,7 @@ $(()=>{
     reward: 35
   }]
   let currentOpponentIndex = 0
-  let opponentPokemon
+  let opponentPokemon = possOpponents[currentOpponentIndex]
   const oppMoveArray = [];
   let opponentXP
 
@@ -135,9 +139,24 @@ $(()=>{
 
   //create the click area where the battle will happen.
   const initializeBattle = () => {
-    let $desc = $('<div>').text('Beat the opponent\'s pokemon and get paid!')
-    let $battleStartButton = $('<div>').text('Start Battle').attr('id', 'start-battle')
+    let $desc = $('<div>').text('Beat the opponent\'s pokemon and get paid! Be careful, if your pokemon\'s XP gets to 0 you lose!')
     $('.click-area').append($desc)
     $('.click-area').append($battleStartButton)
  }
+
+ //click listener for battle start button
+ $battleStartButton.on('click', ()=>{
+   $battleStartButton.hide();
+   let $playerGoesFirstDiv = $('<div>').text('Go '+playersCurrentPokemon+"!")
+   let $pickAnAttack = $('<div>').text('What do you want '+playersCurrentPokemon+' to do?')
+
+   $('.click-area').append($playerGoesFirstDiv)
+   $('.click-area').append($pickAnAttack)
+
+   for(let k = 0; k<moveArray.length; k++){
+     $('.click-area').append($('<div>').text(moveArray[k]).addClass('pokemon-move clickable'))
+   }
+ })
+
+
 }) //closing tag for page load function
