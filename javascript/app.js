@@ -22,6 +22,7 @@ $(()=>{
   let pokemonXP
   let wins = 0;
   let losses = 0;
+  let moveApiUrl = " "
 
   //opponent information
   let possOpponents = [{
@@ -173,10 +174,25 @@ $(()=>{
           let resultsLength = data.results.length
           for(let i=0;i<resultsLength;i++){
             if (data.results[i].name === attackClickedName) {
-              console.log(data.results[i].url);
+              moveApiUrl = data.results[i].url;
+              console.log(moveApiUrl);
+              $getAttackStats(moveApiUrl);
+              return;
             }
           }
      })
  })
+
+ const $getAttackStats = (url) => {
+   $.ajax ({
+     url: url
+   }).then(
+     (data) => {
+       console.log(data);
+     }
+   )
+ }
+
+
 
 }) //closing tag for page load function
