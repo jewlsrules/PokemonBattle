@@ -1,3 +1,22 @@
+//players information
+ const player = {
+   pokemon: [{
+     name: "charmander",
+     xp: 0,
+     attacks:
+       [{
+         attackName: "placeholder1",
+         power: 0
+       }, {
+         attackName: "placeholder2",
+         power: 0
+       }]
+     }],
+   bank: 0,
+   wins: 0,
+   losses: 0,
+ };
+
 $(()=>{
 
   //basic layout set up
@@ -15,13 +34,10 @@ $(()=>{
   //game information & storage
   let playersTurn = true
 
- //players information
   let playersCurrentPokemon
   let $playersPokemonImgSrc;
   const moveArray = [];
   let pokemonXP
-  let wins = 0;
-  let losses = 0;
   let moveApiUrl = " "
   let playersBank = 0;
 
@@ -68,18 +84,59 @@ $(()=>{
   //click function to choose your starting pokemon
   $clickToPick.on('click', (event)=>{
     //retrieve the name of the pokemon that was clicked on
-    let $clickParent = $(event.target).parent().parent();
-    let $pokemonName = $clickParent.children('.poke-picture').children('img').attr('id')
-    //when a player selects a pokemon, it should hide the picker area
-    $choosePokemon.hide();
-    //change the player's pokemon to the one that was chosen.
-    playersCurrentPokemon = $pokemonName
-    //get the url of the current pokemon's photo to display in the battle area div
-    $playersPokemonImgSrc = $clickParent.children('.poke-picture').children('img').attr('src');
-    createPlayersPokemonArea();
-    createOpponentPokemonArea();
-    initializeBattle();
+    let $chosenPokemonName = $(event.currentTarget).parent().children('.poke-picture').children('img').attr('id')
+    console.log($chosenPokemonName);
+    $.ajax ({
+      url:'https://pokeapi.co/api/v2/pokemon/'+ $chosenPokemonName,
+    }).then(
+      (data)=> {
+        player.pokemon[0].name = data.name;
+        player.pokemon[0].xp = data.base_experience;
+        //loop through moves array and find the ones that have version group name "red-blue" && starter level 1
+            for(let i = 0; i<data.moves.length; i++){
+              let array1 = data.moves[i].version_group_details
+              let versionLength = data.moves[i].version_group_details.length;
+                for(let j = 0; j<versionLength; j++){
+                  if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 1)) {
+                    let moveName = data.moves[i].move.name;
+                    //***THIS NEEDS TO BE CHANGED!!!***
+                    player.pokemon[0].attacks.push(moveName)
+                  };
+                }
+              } //end of the for loop
+        console.log(player);
+    })
+    // when a player selects a pokemon, it should hide the picker area
+    // $choosePokemon.hide();
   })
+
+  // //function to pull ajax
+  // const getPokemonInfo = () => {
+  //   $.ajax ({
+  //     url:'https://pokeapi.co/api/v2/pokemon/'+ $chosenPokemonName,
+  //   }).then(
+  //     (data)=> {
+  //       player.pokemon[0].name = data.name
+  //       player.pokemon[0].xp = data.base_experience
+  //       //loop through moves array and find the ones that have version group name "red-blue" && starter level 1
+  //       for(let i = 0; i<data.moves.length; i++){
+  //         let array1 = data.moves[i].version_group_details
+  //         let versionLength = data.moves[i].version_group_details.length;
+  //           for(let j = 0; j<versionLength; j++){
+  //             if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 1)) {
+  //               let move = data.moves[i].move.name;
+  //               player.pokemon[0].attacks.push(move)
+  //             };
+  //           }
+  //         } //end of the for loop
+  // }
+
+    //get the url of the current pokemon's photo to display in the battle area div
+  //   $playersPokemonImgSrc = $(event.currentTarget).parent().children('.poke-picture').children('img').attr('src');
+  //   createPlayersPokemonArea();
+  //   createOpponentPokemonArea();
+  //   initializeBattle();
+  // })
 
   const createPlayersPokemonArea = () => {
     //show the div that most of the game action will happen in.
@@ -93,17 +150,17 @@ $(()=>{
       url:'https://pokeapi.co/api/v2/pokemon/'+playersCurrentPokemon,
     }).then(
       (data)=> {
-        //loop through moves array and find the ones that have version group name "red-blue" && starter level 1
-        for(let i = 0; i<data.moves.length; i++){
-          let array1 = data.moves[i].version_group_details
-          let versionLength = data.moves[i].version_group_details.length;
-            for(let j = 0; j<versionLength; j++){
-              if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 1)) {
-                let move = data.moves[i].move.name;
-                moveArray.push(move)
-              };
-            }
-          } //end of the for loop
+        // //loop through moves array and find the ones that have version group name "red-blue" && starter level 1
+        // for(let i = 0; i<data.moves.length; i++){
+        //   let array1 = data.moves[i].version_group_details
+        //   let versionLength = data.moves[i].version_group_details.length;
+        //     for(let j = 0; j<versionLength; j++){
+        //       if((array1[j].version_group.name === "red-blue") && (array1[j].level_learned_at === 1)) {
+        //         let move = data.moves[i].move.name;
+        //         moveArray.push(move)
+        //       };
+        //     }
+        //   } //end of the for loop
           //go through and list the attacks for this pokemon
           for(let k = 0; k<moveArray.length; k++){
             $('.players-pokemon').append($('<div>').text(moveArray[k]).addClass('pokemon-move'))
