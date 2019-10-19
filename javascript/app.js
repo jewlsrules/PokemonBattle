@@ -35,6 +35,7 @@ $(()=>{
   let pokemonXP;
   let moveApiUrl = " ";
   let tempPokemonConfirmName;
+  let tempPower
 
   //opponent information
   let possOpponents = [{
@@ -49,6 +50,7 @@ $(()=>{
     reward: 35,
     xp: 60
   }];
+
   let currentOpponentIndex = 0;
   let opponentPokemon = possOpponents[currentOpponentIndex].name;
   const oppMoveArray = [];
@@ -257,46 +259,34 @@ $(()=>{
      $('.click-area').append($attackButton2.text(player.pokemon[0].attacks[1].attackName).addClass('pokemon-move'))
  };//end of renderInBattleAttacks function
 
- //player's pokemon attack chosen
-  $attackButton1.on('click', (event)=> {
+ //attack Function
+ let attackFunction = () => {
    let attackClickedName = event.target.innerText
    // console.log(event.target.innerText);
-   $.ajax ({
-     url:'https://pokeapi.co/api/v2/move/?offset=0&limit=800'
-      }).then(
-        (data)=> {
-          let resultsLength = data.results.length
-          for(let i=0;i<resultsLength;i++){
-            if (data.results[i].name === attackClickedName) {
-              moveApiUrl = data.results[i].url;
-              console.log(moveApiUrl);
-              $getAttackStats(moveApiUrl);
-              return;
-            }//end of if statement
-          }//end of for loop
-     })//end of ajax call
-   })//end of attack button 1 function
+   console.log(attackClickedName);
+   //find the attack in the player's pokemon moves array and return it's power.
+   for(let i=0;i<player.pokemon[0].attacks.length;i++){
+     if(player.pokemon[0].attacks[i].attackName === attackClickedName) {
+       console.log('this attack does damage of: '+player.pokemon[0].attacks[i].power);
+       tempPower = parseInt(player.pokemon[0].attacks[i].power)
+     }//end of if statement
+   }//end of for loop
+   // console.log('temp power variable: '+tempPower);
+   //reduce the opponent's current pokemon's xp by the amount of power in the attack
+   possOpponents[currentOpponentIndex].xp = parseInt(possOpponents[currentOpponentIndex].xp) - tempPower
+   console.log('opponent\'s XP is now '+ possOpponents[currentOpponentIndex].xp);
+   checkForOppDefeat();
+ }
+
+ //player's pokemon attack chosen
+  $attackButton1.on('click', (event)=> {
+    attackFunction();
+  })//end of attack button 1 function
 
    //player's pokemon attack chosen
-    $attackButton2.on('click', (event)=> {
-     let attackClickedName = event.target.innerText
-     // console.log(event.target.innerText);
-     //this ajax call is to get the url for the attack, which will be used in the $getAttackStats function in another ajax call
-     $.ajax ({
-       url:'https://pokeapi.co/api/v2/move/?offset=0&limit=800'
-        }).then(
-          (data)=> {
-            let resultsLength = data.results.length
-            for(let i=0;i<resultsLength;i++){
-              if (data.results[i].name === attackClickedName) {
-                moveApiUrl = data.results[i].url;
-                console.log(moveApiUrl);
-                $getAttackStats(moveApiUrl);
-                return;
-              }
-            }
-       })
-     })//end of attack button 2 function
+  $attackButton2.on('click', (event)=> {
+    attackFunction();
+  })//end of attack button 2 function
 
  // update opponent's xp display function
  const updateOppXP = () => {
@@ -312,8 +302,9 @@ $(()=>{
 
  //function to check if opponent's XP is at 0 or less
  const checkForOppDefeat = () => {
+   console.log('now checking for opponent\'s defeat');
    //if the opponent's xp is below 0, we will declare the player to be the winner
-   if(opponentXP <= 0){
+   if(possOpponents[currentOpponentIndex].xp <= 0){
      opponentWasDefeatedDisplayUpdate();
      playerWins();
      //if the opponent still has XP, we will update the display and change the turn
@@ -330,8 +321,8 @@ $(()=>{
     let $youWinAlert = $('<div>').text('You beat '+possOpponents[currentOpponentIndex].name+'! You earned '+possOpponents[currentOpponentIndex].reward+' coins. Great job!').addClass('winDiv');
     $('.click-area').append($youWinAlert)
     //add the reward type to the player's bank
-    playersBank = playersBank + parseInt(possOpponents[currentOpponentIndex].reward)
-    console.log('the player now has '+playersBank+' coins');
+    player.bank = player.bank + parseInt(possOpponents[currentOpponentIndex].reward)
+    console.log('the player now has '+player.bank+' coins');
     //change the opponent's pokemon to the next in the array
     currentOpponentIndex++
   }
