@@ -1,8 +1,17 @@
 body {
   background: cornflowerblue;
+  font-family: 'Rubik', sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .header{
+  width: 100%;
     font-size: 1.75em;
     text-align: center;
     border-bottom: 1px solid black;
@@ -28,6 +37,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  margin: 10px;
 }
 
 .choose-pokemon > h3 {
@@ -153,6 +163,8 @@ div img {
 }
 
 .other-options {
+  width: 100%;
+  max-width: 1100px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -162,10 +174,31 @@ div img {
 .shop {
   width: 22%;
   border: 1px solid black;
+  position: relative;
 }
 
 .shop > img {
   width: 100%;
+  display: block;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.5); /* Black see-through */
+    color: #f1f1f1;
+    width: 50%;
+    transition: .3s ease;
+    opacity:0;
+    color: white;
+    font-size: 1.5empx;
+    padding: 20px;
+    text-align: center;
+  }
+
+.shop:hover > .overlay {
+  opacity: 1;
 }
 
 .fainted {
@@ -173,7 +206,14 @@ div img {
   transition-duration: 4s;
 }
 
-/* @keyframes swirl-to-nothing{
-  0% {transform: scale(1)}
-  100% {transform: scale(.01) rotate(500deg)}
-} */
+.winner {
+  animation-name: winner-winner;
+  animation-duration: 3s;
+  animation-iteration-count: 1;
+}
+
+@keyframes winner-winner {
+  20% {transform: rotate(-45deg)}
+  70% {transform: rotate(45deg)}
+  100% {transform: rotate(0deg)}
+}

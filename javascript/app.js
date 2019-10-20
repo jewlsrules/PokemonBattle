@@ -4,6 +4,7 @@
      name: "no pokemon yet",
      pokedexNum: 0,
      xp: 0,
+     maxxp: 0,
      attacks:
        []
      }],
@@ -19,7 +20,8 @@
    photoUrl: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/010.png',
    level: 1,
    reward: 20,
-   xp: 55,
+   xp: 48,
+   maxxp: 48,
    accuracy: 1,
    attacks: [{
        attackName: 'tackle',
@@ -37,7 +39,8 @@
    photoUrl: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/016.png',
    level: 2,
    reward: 30,
-   xp: 50,
+   xp: 55,
+   maxxp: 55,
    accuracy: .75,
    attacks: [{
        attackName: 'razor-wind',
@@ -56,6 +59,7 @@
    level: 3,
    reward: 40,
    xp: 60,
+   maxxp: 60,
    accuracy: .9,
    attacks: [{
        attackName: 'mega-punch',
@@ -143,7 +147,7 @@ $(()=>{
         //update the player's object with the pokemon's name, base xp, & pokedex #
         player.pokemon[0].name = data.name;
         player.pokemon[0].xp = data.base_experience;
-        player.pokemon[0].pokedexNum = data.id;
+        player.pokemon[0].maxxp = data.base_experience;
         //loop through moves array and find the ones that have version group name "red-blue" && starter level 1
             for(let i = 0; i<data.moves.length; i++){
               let array1 = data.moves[i].version_group_details
@@ -238,12 +242,12 @@ $(()=>{
     //show the div that most of the game action will happen in.
     $('.battle-play').show().css('display', 'flex');
     //show the photo of the pokemon that was chosen
-    $playersPokemonDiv.append($('<img>').attr('src', $playersPokemonImgSrc).addClass('players-pokemon-photo'))
+    $playersPokemonDiv.append($('<img>').attr('src', $playersPokemonImgSrc).addClass('players-pokemon-photo').attr('id', 'playersPokePhoto'))
     //show the name of the current pokemon
     console.log('player\'s current pokemon is '+ player.pokemon[0].name);
     $playersPokemonDiv.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
     //display the pokemon's xp
-    let $playersXPDisplay = $('<div>').text('XP: '+ player.pokemon[0].xp).addClass('xp-stats').attr('id',  'playersXP');
+    let $playersXPDisplay = $('<div>').text('XP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP');
     $playersPokemonDiv.append($playersXPDisplay)
   }; //end of the createPlayersPokemonArea function
 
@@ -293,22 +297,24 @@ $(()=>{
      if(player.pokemon[0].attacks[i].attackName === attackClickedName && player.pokemon[0].attacks[i].power) {
        console.log('this attack does damage of: '+player.pokemon[0].attacks[i].power);
        tempPower = parseInt(player.pokemon[0].attacks[i].power)
-          //reduce the opponent's current pokemon's xp by the amount of power in the attack
+       //reduce the opponent's current pokemon's xp by the amount of power in the attack
        possOpponents[currentOpponentIndex].xp = parseInt(possOpponents[currentOpponentIndex].xp) - tempPower
+       console.log('opponent\'s XP is now '+ possOpponents[currentOpponentIndex].xp);
+       checkForOppDefeat();
+       return;
      } else {
        tempPower = 0
        console.log('this attack doesn\'t do any damage');
+       checkForOppDefeat();
      }
      //end of if statement
    }//end of for loop
    // console.log('temp power variable: '+tempPower);
-   console.log('opponent\'s XP is now '+ possOpponents[currentOpponentIndex].xp);
-   checkForOppDefeat();
  }
 
  // update opponent's xp display function
  const updateOppXP = () => {
-  $('#oppXpStat').text('XP: '+opponentXP);
+  $('#oppXpStat').text('XP: '+possOpponents[currentOpponentIndex].xp);
   //ths will make it so that the opponent's turn is next
   playersTurn = false
  }
@@ -344,6 +350,7 @@ $(()=>{
 
   //player wins function
   const playerWins = () => {
+    $('#playersPokePhoto').addClass('winner')
     //hide the battle area to display the win information
     $('.click-area').children().hide();
     //win display information
@@ -408,7 +415,7 @@ $(()=>{
       // console.log('opponent used '+ opponentChosenAttack);
       // console.log('your pokemon now has ' + player.pokemon[0].xp+' xp left');
       //change user's pokemon's display to their current XP
-      $('#playersXP').text('XP: '+player.pokemon[0].xp);
+      $('#playersXP').text('XP: '+player.pokemon[0].xp+'/'+player.pokemon[0].maxxp);
       let $chooseNextStep = $('<div>').text('What do you want to do next?')
       //create an area for the user to choose the next step
       $('.click-area').append($chooseNextStep)
