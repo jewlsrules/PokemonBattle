@@ -250,7 +250,7 @@ $(()=>{
   //this function will create the opponent's area with all the opponent pokemon's information
   const createOpponentPokemonArea = () => {
     //hardcoded for now, needs to be updated eventually
-    let caterpiePicture = $('<img>').attr('src', possOpponents[currentOpponentIndex].photoUrl).addClass('players-pokemon-photo')
+    let caterpiePicture = $('<img>').attr('src', possOpponents[currentOpponentIndex].photoUrl).addClass('players-pokemon-photo').attr('id','oppPhoto')
     $('.opponent-area').append(caterpiePicture)
     $('.opponent-area').append($('<div>').text(possOpponents[currentOpponentIndex].name).addClass('current-pokemon-name'))
     //display the starting XP for the pokemon
@@ -316,6 +316,7 @@ $(()=>{
  //if the opponent's XP is 0 or less, it will display that they've fainted
  const opponentWasDefeatedDisplayUpdate = () => {
    $('#oppXpStat').text('The Pokemon Fainted!');
+   $('#oppPhoto').addClass('fainted')
  }
 
  //function to check if opponent's XP is at 0 or less
