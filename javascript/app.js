@@ -242,7 +242,8 @@ $(()=>{
     console.log('player\'s current pokemon is '+ player.pokemon[0].name);
     $playersPokemonDiv.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
     //display the pokemon's xp
-    $playersPokemonDiv.append($('<div>').text('XP: '+ player.pokemon[0].xp).addClass('xp-stats').attr('id', 'playersXP'))
+    let $playersXPDisplay = $('<div>').text('XP: '+ player.pokemon[0].xp).addClass('xp-stats').attr('id',  'playersXP');
+    $playersPokemonDiv.append($playersXPDisplay)
   }; //end of the createPlayersPokemonArea function
 
   //this function will create the opponent's area with all the opponent pokemon's information
@@ -386,33 +387,57 @@ $(()=>{
       player.pokemon[0].xp = player.pokemon[0].xp - tempOppPower;
       opponentChosenAttack = possOpponents[currentOpponentIndex].attacks[1].attackName;
     } //end of if statement
-    $opponentAttackedDiv.append($('<h2>').text(possOpponents[currentOpponentIndex].name+' attacked '+ player.pokemon[0].name+" using "+opponentChosenAttack +" and did "+ tempOppPower+" damage!"))
-    console.log('opponent used '+ opponentChosenAttack);
-    console.log('your pokemon now has ' + player.pokemon[0].xp+' xp left');
+    checkIfPlayerLost();
   }//end of opponentAttack function
 
   //check if player lost Function
   const checkIfPlayerLost = () => {
     if (player.pokemon[0].xp > 0) {
-      $opponentAttackedDiv.append($('<h2>').text(possOpponents[currentOpponentIndex].name+' attacked '+ player.pokemon[0].name+" using "+opponentChosenAttack +" and did "+ tempOppPower+" damage!"))
+      //text displaying in the middle showing how much damage was done and by what attack.
+      let $damageText = $('<h2>').text(possOpponents[currentOpponentIndex].name+' attacked '+ player.pokemon[0].name+" using "+opponentChosenAttack +" and did "+ tempOppPower+" damage!");
+      //append that to the middle div
+      $('.click-area').append($damageText);
       // console.log('opponent used '+ opponentChosenAttack);
       // console.log('your pokemon now has ' + player.pokemon[0].xp+' xp left');
-      reducePlayersXPDisplay();
+      //change user's pokemon's display to their current XP
+      $('#playersXP').text('XP: '+player.pokemon[0].xp);
+      let $chooseNextStep = $('<div>').text('What do you want to do next?')
+      //create an area for the user to choose the next step
+      $('.click-area').append($chooseNextStep)
+      //2 options for the user 1. attack again
+      let $attackChoice = $('<h3>').text('Keep Fighting').addClass('choice-button').attr('id', 'keep-fighting');
+      $attackChoice.on('click', ()=>{
+        console.log('let\'s attack!');
+      })
+      //2. run away
+      let $runAwayChoice = $('<h3>').text('Run Away').addClass('choice-button').attr('id', 'run-away');
+      $runAwayChoice.on('click', ()=> {
+        console.log('run away!!');
+      })
+      //put these in the player's choice div
+      $chooseNextStep.append($attackChoice);
+      $chooseNextStep.append($runAwayChoice);
+      //change the turn so that it's the player's turn again
+      player.turn = true;
     } else {
-      playerLostPokemonXPDisplay();
+      $('#playersXP').text('Your Pokemon Fainted!');
       alert('You lose.');
     }
   }
 
   //function to update player's XP display if they lost
   const playerLostPokemonXPDisplay = () => {
-    $('#playersXP').text('Your Pokemon Fainted!');
+    $playersPokemonDiv.children('#playersXP').text('Your Pokemon Fainted!');
   };
 
   //function to update player's XP display if they still have XP
   const reducePlayersXPDisplay = () => {
-    $('#playersXP').text(player.pokemon[0].xp);
+    $playersPokemonDiv.children('#playersXP').text(player.pokemon[0].xp);
   }
 
+  // //event listener for the keep fighting button
+  // $('#keep-fighting').on('click', ()=> {
+  //   console.log('player wants to continue fighting');
+  // })
 
 }) //closing tag for page load function
