@@ -149,4 +149,21 @@ div img {
   border: 1px solid black;
   border-radius: 3px;
   color: white;
+  margin: 4px;
+}
+
+.other-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.shop {
+  width: 22%;
+  border: 1px solid black;
+}
+
+.shop > img {
+  width: 100%;
 }

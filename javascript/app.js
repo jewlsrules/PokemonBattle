@@ -19,7 +19,7 @@
    photoUrl: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/010.png',
    level: 1,
    reward: 20,
-   xp: 39,
+   xp: 55,
    accuracy: 1,
    attacks: [{
        attackName: 'tackle',
@@ -84,6 +84,7 @@ $(()=>{
   let $battleStartButton = $('<div>').text('Start Battle').attr('id', 'start-battle');
   let $attackButton1 = $('<div>').addClass('clickable');
   let $attackButton2 = $('<div>').addClass('clickable');
+  $('.other-options').hide();
 
   //game information & storage
   let playersCurrentPokemon;
@@ -305,16 +306,6 @@ $(()=>{
    checkForOppDefeat();
  }
 
- // //player's pokemon attack chosen
- //  $attackButton1.on('click', (event)=> {
- //    attackFunction();
- //  })//end of attack button 1 function
- //
- //   //player's pokemon attack chosen
- //  $attackButton2.on('click', (event)=> {
- //    attackFunction();
- //  })//end of attack button 2 function
-
  // update opponent's xp display function
  const updateOppXP = () => {
   $('#oppXpStat').text('XP: '+opponentXP);
@@ -355,13 +346,30 @@ $(()=>{
     //hide the battle area to display the win information
     $('.click-area').children().hide();
     //win display information
-    let $youWinAlert = $('<div>').text('You beat '+possOpponents[currentOpponentIndex].name+'! You earned '+possOpponents[currentOpponentIndex].reward+' coins. Great job!').addClass('winDiv');
+    let $youWinAlert = $('<h2>').text('You beat '+possOpponents[currentOpponentIndex].name+'! You earned '+possOpponents[currentOpponentIndex].reward+' coins. Great job!').addClass('winDiv');
     $('.click-area').append($youWinAlert)
     //add the reward type to the player's bank
     player.bank = player.bank + parseInt(possOpponents[currentOpponentIndex].reward)
     console.log('the player now has '+player.bank+' coins');
     //change the opponent's pokemon to the next in the array
     currentOpponentIndex++
+    player.wins++
+    // console.log('player has won this many times: '+player.wins);
+    if(player.wins === 1) {
+      $('.other-options').show();
+      let $introduceShops = $('<div>')
+      $('.click-area').append($introduceShops);
+
+      let $coinIntroduction = $('<h3>').text('You have money to spend! Would you like to check out the shop and buy something?');
+      let $goToShopButton = $('<h3>').text('Go To Shop').addClass('choice-button');
+      let $nextBattleButton = $('<h3>').text('Fight Again!').addClass('choice-button');
+
+      $('.click-area').append($coinIntroduction)
+      $('.click-area').append($goToShopButton)
+      $('.click-area').append($nextBattleButton)
+    } else {
+      console.log('player doesn\'t have a win');
+    }
   }//end of playerWins function
 
   //opponent attack Function
