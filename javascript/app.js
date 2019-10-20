@@ -20,6 +20,7 @@
    level: 1,
    reward: 20,
    xp: 39,
+   accuracy: 1,
    attacks: [{
        attackName: 'tackle',
        power: 20,
@@ -27,7 +28,7 @@
      },
      {
        attackName: 'string-shot',
-       power: 0,
+       power: 5,
        liklihood: .75
      }]
  },
@@ -37,6 +38,7 @@
    level: 2,
    reward: 30,
    xp: 50,
+   accuracy: .75,
    attacks: [{
        attackName: 'razor-wind',
        power: 30,
@@ -54,6 +56,7 @@
    level: 3,
    reward: 40,
    xp: 60,
+   accuracy: .9,
    attacks: [{
        attackName: 'mega-punch',
        power: 35,
@@ -96,6 +99,7 @@ $(()=>{
   const oppMoveArray = [];
   let opponentXP = possOpponents[currentOpponentIndex].xp;
   let opponentChosenAttack
+  let tempOppPower
 
 
   ////////////////////////////
@@ -238,7 +242,7 @@ $(()=>{
     console.log('player\'s current pokemon is '+ player.pokemon[0].name);
     $playersPokemonDiv.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
     //display the pokemon's xp
-    $playersPokemonDiv.append($('<div>').text('XP: '+ player.pokemon[0].xp).addClass('xp-stats'))
+    $playersPokemonDiv.append($('<div>').text('XP: '+ player.pokemon[0].xp).addClass('xp-stats').attr('id', 'playersXP'))
   }; //end of the createPlayersPokemonArea function
 
   //this function will create the opponent's area with all the opponent pokemon's information
@@ -374,17 +378,41 @@ $(()=>{
       // console.log(possOpponents[currentOpponentIndex].name + ' attacked with 1st attack: '+possOpponents[currentOpponentIndex].attacks[0].attackName);
       //reduce player's pokemon by the amount of the attack
       opponentChosenAttack = possOpponents[currentOpponentIndex].attacks[0].attackName;
-      player.pokemon[0].xp = player.pokemon[0].xp - possOpponents[currentOpponentIndex].attacks[0].power;
+      tempOppPower = possOpponents[currentOpponentIndex].attacks[0].power
+      player.pokemon[0].xp = player.pokemon[0].xp - tempOppPower;
     } else {
       // console.log(possOpponents[currentOpponentIndex].name + ' attacked with 2nd attack:  '+possOpponents[currentOpponentIndex].attacks[1].attackName);
-      player.pokemon[0].xp = player.pokemon[0].xp - possOpponents[currentOpponentIndex].attacks[1].power;
+      tempOppPower = possOpponents[currentOpponentIndex].attacks[1].power
+      player.pokemon[0].xp = player.pokemon[0].xp - tempOppPower;
       opponentChosenAttack = possOpponents[currentOpponentIndex].attacks[1].attackName;
     } //end of if statement
-    $opponentAttackedDiv.append('<h2>').text(possOpponents[currentOpponentIndex].name+' attacked '+ player.pokemon[0].name+" using "+opponentChosenAttack +"!")
+    $opponentAttackedDiv.append($('<h2>').text(possOpponents[currentOpponentIndex].name+' attacked '+ player.pokemon[0].name+" using "+opponentChosenAttack +" and did "+ tempOppPower+" damage!"))
     console.log('opponent used '+ opponentChosenAttack);
     console.log('your pokemon now has ' + player.pokemon[0].xp+' xp left');
   }//end of opponentAttack function
 
+  //check if player lost Function
+  const checkIfPlayerLost = () => {
+    if (player.pokemon[0].xp > 0) {
+      $opponentAttackedDiv.append($('<h2>').text(possOpponents[currentOpponentIndex].name+' attacked '+ player.pokemon[0].name+" using "+opponentChosenAttack +" and did "+ tempOppPower+" damage!"))
+      // console.log('opponent used '+ opponentChosenAttack);
+      // console.log('your pokemon now has ' + player.pokemon[0].xp+' xp left');
+      reducePlayersXPDisplay();
+    } else {
+      playerLostPokemonXPDisplay();
+      alert('You lose.');
+    }
+  }
+
+  //function to update player's XP display if they lost
+  const playerLostPokemonXPDisplay = () => {
+    $('#playersXP').text('Your Pokemon Fainted!');
+  };
+
+  //function to update player's XP display if they still have XP
+  const reducePlayersXPDisplay = () => {
+    $('#playersXP').text(player.pokemon[0].xp);
+  }
 
 
 }) //closing tag for page load function
