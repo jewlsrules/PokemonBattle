@@ -514,6 +514,10 @@ $(()=>{
     $('.welcome').append($backToBattle);
   })
 
+  ///////////////////////////
+  //2nd + Battle
+  ///////////////////////////
+
   //return to battle Function
   const returnToBattle = () => {
     $('.pokemon-center').hide();
@@ -522,13 +526,24 @@ $(()=>{
 
   //render the next battle Function
   const renderNextBattle = () => {
+    //make it so the pokemon picture doesn't dance on start up
     $('#playersPokePhoto').removeClass('winner');
-    $('#playersXP').text(player.pokemon[0].xp+'/'+player.pokemon[0].maxxp);
+    //update the player's XP to it's current XP
+    $('#playersXP').text('XP: '+player.pokemon[0].xp+'/'+player.pokemon[0].maxxp);
+    //show the div for battle
     $('.battle-play').show();
+    //empty the old text that was in the click area div
     $('.click-area').empty();
-    let $nextOpponentInfo = $('<div>')
-    $nextOpponentInfo.append($('<h2>').text("Next Opponent:"))
-    $('.click-area').append($nextOpponentInfo)
+    initializeBattle();
+    $battleStartButton.on('click', playerFight)
+    //show information about the next opponent before the battle begins
+    $('.opponent-area').empty();
+    $('.opponent-area').append($('<h2>').text("Next Opponent:"));
+    $('.opponent-area').append($('<img>').attr('src', possOpponents[currentOpponentIndex].photoUrl).addClass('players-pokemon-photo'));
+    $('.opponent-area').append($('<h2>').text(possOpponents[currentOpponentIndex].name).addClass('current-pokemon-name'));
+    $('.opponent-area').append($('<div>').text("XP: "+ possOpponents[currentOpponentIndex].xp+'/'+possOpponents[currentOpponentIndex].maxxp).addClass('xp-stats').attr('id', 'oppXpStat'));
+    $('.opponent-area').append($('<h3>').text('Reward: '+possOpponents[currentOpponentIndex].reward+' coins'));
+    //show information about the next opponent before the battle begins
   }
 
   /////////////////////////
