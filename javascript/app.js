@@ -12,7 +12,7 @@
    wins: 0,
    losses: 0,
    turn: true,
-   items: []
+   items: [],
  };
 
  //opponent information
@@ -264,8 +264,11 @@ $(()=>{
     $('.opponent-area').append(caterpiePicture)
     $('.opponent-area').append($('<div>').text(possOpponents[currentOpponentIndex].name).addClass('current-pokemon-name'))
     //display the starting XP for the pokemon
-    let oppDisplayXP = $('<div>').text("XP: "+ possOpponents[currentOpponentIndex].xp).addClass('xp-stats').attr('id', 'oppXpStat')
+    let oppDisplayXP = $('<div>').text("XP: "+ possOpponents[currentOpponentIndex].xp+'/'+possOpponents[currentOpponentIndex].maxxp).addClass('xp-stats').attr('id', 'oppXpStat')
     $('.opponent-area').append(oppDisplayXP)
+    //display reward for defeating pokemon
+    let $rewardDisplay = $('<h3>').text('Reward: '+possOpponents[currentOpponentIndex].reward+' coins')
+    $('.opponent-area').append($rewardDisplay)
   }// end of creating opponent area function
 
   //create the click area where the battle will happen.
@@ -321,7 +324,7 @@ $(()=>{
 
  // update opponent's xp display function
  const updateOppXP = () => {
-  $('#oppXpStat').text('XP: '+possOpponents[currentOpponentIndex].xp);
+  $('#oppXpStat').text('XP: '+possOpponents[currentOpponentIndex].xp+'/'+possOpponents[currentOpponentIndex].maxxp);
   //ths will make it so that the opponent's turn is next
   playersTurn = false
  }
@@ -380,6 +383,7 @@ $(()=>{
 
       $('.click-area').append($coinIntroduction)
 
+      $('#players-bank').text(player.bank)
     } else {
       console.log('player doesn\'t have a win');
     }
@@ -457,6 +461,11 @@ $(()=>{
 
     renderInBattleAttacks();
   }
+
+  /////////////////////////
+  //POKEMART
+  /////////////////////////
+
 
 
 }) //closing tag for page load function
