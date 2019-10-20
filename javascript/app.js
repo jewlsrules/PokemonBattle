@@ -3,6 +3,7 @@
    pokemon: [{
      name: "no pokemon yet",
      pokedexNum: 0,
+     img: " ",
      xp: 0,
      maxxp: 0,
      attacks:
@@ -75,6 +76,9 @@
  },
  ];
 
+ //items in shop array
+ itemsForSale = []
+
 //on load
 $(()=>{
 
@@ -90,10 +94,19 @@ $(()=>{
   let $attackButton1 = $('<h2>').addClass('choice-button');
   let $attackButton2 = $('<h2>').addClass('choice-button');
   $('.other-options').hide();
+  $('.pokemart').hide();
+  $('.pokemon-center').hide();
+
+  //player's pokemon display
+  // let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
+  //   $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
+  //   $playersPokemon.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
+  //   //display the pokemon's xp
+  //   $playersPokemon.append($('<div>').text('XP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
 
   //game information & storage
   let playersCurrentPokemon;
-  let $playersPokemonImgSrc;
+  let $playersPokemonImgSrc = " ";
   const moveArray = [];
   let pokemonXP;
   let moveApiUrl = " ";
@@ -166,7 +179,8 @@ $(()=>{
         // console.log(player);
     })
     //save the url of the chosen pokemon to use in the battle area
-    $playersPokemonImgSrc = $(event.currentTarget).parent().children('.poke-picture').children('img').attr('src')
+    $playersPokemonImgSrc = $(event.currentTarget).parent().children('.poke-picture').children('img').attr('src');
+    player.pokemon[0].img = $(event.currentTarget).parent().children('.poke-picture').children('img').attr('src')
     //confirm the pokemon choice to allow time for API to populate player's object with pokemon information'
     confirmPokemon();
   })
@@ -209,8 +223,8 @@ $(()=>{
           //push attack information into player's pokemon's attack array
           player.pokemon[0].attacks.push({attackName: data.name, power: attackInt})
       }
-    )
-  }
+    )//end of ajax call
+  }//end of $getAttackStats
 
   //confirm pokemon choice - we need this buffer in here to ensure that the API has pulled all the information into the players array before startng the first battle and rendering information
   const confirmPokemon = () => {
@@ -376,10 +390,10 @@ $(()=>{
     //after the player wins the first, easy round which is designed to get them used to how to battle and which attacks they should use, they'll be able to explore the other options in the game.
     if(player.wins === 1) {
       $('.other-options').show();
-      let $introduceShops = $('<div>')
-      $('.click-area').append($introduceShops);
+      let $introducePokeCenter = $('<div>')
+      $('.click-area').append($introducePokeCenter);
 
-      let $coinIntroduction = $('<h3>').text('You have money to spend! Why don\'t you head over to the Pokemart and buy something?');
+      let $coinIntroduction = $('<h3>').text('Your Pokemon took damage, let\'s go to the Pokemon Center to get it healed.');
 
       $('.click-area').append($coinIntroduction)
 
@@ -463,9 +477,88 @@ $(()=>{
   }
 
   /////////////////////////
-  //POKEMART
+  //Poke-hospital
   /////////////////////////
 
+  //when the player clicks on the pokecenter icon, show them the poke center and hide the battle area.
+  $('#poke-center').on('click', () => {
+    console.log('user clicked on the pokemon center');
+    //hide the battle area
+    $('.battle-play').hide();
+    $('.pokemon-center').show();
+    $('.pokemon-center').children('.left').empty();
+    let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
+      $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
+      $playersPokemon.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
+      //display the pokemon's xp
+      $playersPokemon.append($('<div>').text('XP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
+    $('.pokemon-center').children('.left').append($playersPokemon)
+  })
+
+  $('#heal-pokemon').on('click', () => {
+    player.pokemon[0].xp = player.pokemon[0].maxxp;
+    player.bank = player.bank - 5
+    $('#players-bank').text(player.bank)
+    console.log(player);
+    $('.pokemon-center').children('.left').empty();
+    let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
+      $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
+      $playersPokemon.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
+      //display the pokemon's xp
+      $playersPokemon.append($('<div>').text('XP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
+    $('.pokemon-center').children('.left').append($playersPokemon)
+    $('.welcome').children().hide();
+    let $backToBattle = $('<div>')
+    $backToBattle.append($('<h2>').text(player.pokemon[0].name + " looks like they're healed up and ready for another battle!"));
+    $backToBattle.append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle()))
+    $('.welcome').append($backToBattle);
+  })
+
+  //return to battle Function
+  const returnToBattle = () => {
+    
+  }
+
+
+  /////////////////////////
+  //POKEMART
+  /////////////////////////
+  // $('#pokemart').on('click', ()=>{
+  //   console.log('user clicked on pokemart');
+  //   renderPokemart();
+  // })
+  //
+  // //if this is the player's first visit to the pokemart, then we should introduce them to what it is and how to buy products
+  // const renderPokemart = () => {
+  //   //hide the battle area
+  //   $('.battle-play').hide();
+  //   //show the shop div
+  //   $('.pokemart').show();
+  //   //if this is the first visit to the pokemart, we will show them an intro modal
+  //   if (player.wins === 1) {
+  //     introducePokemart();
+  //     //if the player has won and been to the shop before, we'll just show the shop and skip the intro
+  //   } else {
+  //     showPokemart();
+  //   }
+  // }
+  //
+  // //introduce pokemart Function
+  // const introducePokemart = () => {
+  //   //enter a modal to introduce the pokemart and what you can buy
+  //   showPokemart();
+  //   $.ajax ({
+  //     //we get the url from the attack button click listener
+  //     url: 'https://pokeapi.co/api/v2/item/?offset=00&limit=1000'
+  //   }).then(
+  //     (data) => {
+  //       let itemLength = data.results.length;
+  //       for(let i=0; i<itemLength;i++){
+  //         if(data.results[i].name)
+  //       }
+  //     }
+  //   )//end of ajax call
+  // }
 
 
 }) //closing tag for page load function
