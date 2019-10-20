@@ -222,6 +222,15 @@ div img {
   opacity: 1;
 }
 
+.shop:hover {
+  box-shadow: 10px 10px 10px 5px rgba(0, 0, 0, 0.2);
+}
+
+.locked {
+  background-color: black;
+  opacity: 0.5;
+}
+
 .fainted {
   transform: rotate(500deg) scale(0.01);
   transition-duration: 4s;

@@ -12,6 +12,7 @@
    wins: 0,
    losses: 0,
    turn: true,
+   items: []
  };
 
  //opponent information
@@ -369,18 +370,16 @@ $(()=>{
     currentOpponentIndex++
     player.wins++
     // console.log('player has won this many times: '+player.wins);
+    //after the player wins the first, easy round which is designed to get them used to how to battle and which attacks they should use, they'll be able to explore the other options in the game.
     if(player.wins === 1) {
       $('.other-options').show();
       let $introduceShops = $('<div>')
       $('.click-area').append($introduceShops);
 
-      let $coinIntroduction = $('<h3>').text('You have money to spend! Would you like to check out the shop and buy something?');
-      let $goToShopButton = $('<h3>').text('Go To Shop').addClass('choice-button');
-      let $nextBattleButton = $('<h3>').text('Fight Again!').addClass('choice-button');
+      let $coinIntroduction = $('<h3>').text('You have money to spend! Why don\'t you head over to the Pokemart and buy something?');
 
       $('.click-area').append($coinIntroduction)
-      $('.click-area').append($goToShopButton)
-      $('.click-area').append($nextBattleButton)
+
     } else {
       console.log('player doesn\'t have a win');
     }
