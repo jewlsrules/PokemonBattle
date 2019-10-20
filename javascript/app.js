@@ -86,8 +86,8 @@ $(()=>{
   let $clickToPick = $('.click-to-pick');
   let $playersPokemonDiv = $('.players-pokemon');
   let $battleStartButton = $('<div>').text('Start Battle').attr('id', 'start-battle');
-  let $attackButton1 = $('<div>').addClass('clickable');
-  let $attackButton2 = $('<div>').addClass('clickable');
+  let $attackButton1 = $('<h2>').addClass('choice-button');
+  let $attackButton2 = $('<h2>').addClass('choice-button');
   $('.other-options').hide();
 
   //game information & storage
@@ -217,7 +217,7 @@ $(()=>{
     $choosePokemon.hide();
     //create a new div that the player can click on to confirm their choice
     ///*****NEEDS UPDATING FROM HARDCODED CHARMANDER*****
-    let $confirmDiv = $('<div>').attr('id', 'confirm').css('width', "60%")
+    let $confirmDiv = $('<div>').attr('id', 'confirm')
     let $confirmText = $('<h2>').text('Are you sure you want '+tempPokemonConfirmName+'? You can only choose your starting pokemon once, so choose wisely!')
     let $confirmChoosePokemon = $('<h2>').text('Yes, I choose you, '+tempPokemonConfirmName+'!').on('click', startFirstBattle).addClass('click-to-pick')
     //put this new div in the main area
@@ -269,7 +269,7 @@ $(()=>{
 
   //create the click area where the battle will happen.
   const initializeBattle = () => {
-    let $desc = $('<h2>').text('Beat the opponent\'s pokemon and get paid! Be careful, if your pokemon\'s XP gets to 0 you lose!')
+    let $desc = $('<h2>').text('Beat the opponent\'s pokemon and get a reward! Be careful, if your pokemon\'s XP gets to 0 you lose!')
     $('.click-area').append($desc)
     $('.click-area').append($battleStartButton)
  }
@@ -282,11 +282,12 @@ $(()=>{
 //render the buttons for the battle
  let renderInBattleAttacks = () => {
    //this could get changed into a for loop...
-     $('.click-area').append($attackButton1.text(player.pokemon[0].attacks[0].attackName).addClass('pokemon-move'));
+  $('.click-area').append($('<div>').addClass('battle-attack-picker'))
+  $('.battle-attack-picker').append($attackButton1.text(player.pokemon[0].attacks[0].attackName));
      $attackButton1.on('click', (event)=> {
        attackFunction();
      });
-     $('.click-area').append($attackButton2.text(player.pokemon[0].attacks[1].attackName).addClass('pokemon-move'));
+  $('.battle-attack-picker').append($attackButton2.text(player.pokemon[0].attacks[1].attackName).addClass('pokemon-move'));
      $attackButton2.on('click', (event)=> {
        attackFunction();
      })
@@ -421,7 +422,7 @@ $(()=>{
       // console.log('your pokemon now has ' + player.pokemon[0].xp+' xp left');
       //change user's pokemon's display to their current XP
       $('#playersXP').text('XP: '+player.pokemon[0].xp+'/'+player.pokemon[0].maxxp);
-      let $chooseNextStep = $('<div>').text('What do you want to do next?')
+      let $chooseNextStep = $('<h2>').text('What do you want to do next?')
       //create an area for the user to choose the next step
       $('.click-area').append($chooseNextStep)
       //2 options for the user 1. attack again
@@ -449,8 +450,8 @@ $(()=>{
   //function to keep Fighting
   const playerFight = () => {
     $('.click-area').empty();
-    let $playerGoesFirstDiv = $('<div>').text('Go '+player.pokemon[0].name+"!")
-    let $pickAnAttack = $('<div>').text('What attack do you want '+player.pokemon[0].name+' to do?')
+    let $playerGoesFirstDiv = $('<h2>').text('Go '+player.pokemon[0].name+"!")
+    let $pickAnAttack = $('<h2>').text('What attack do you want '+player.pokemon[0].name+' to do?')
 
     $('.click-area').append($playerGoesFirstDiv)
     $('.click-area').append($pickAnAttack)
