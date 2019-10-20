@@ -510,15 +510,26 @@ $(()=>{
     $('.welcome').children().hide();
     let $backToBattle = $('<div>')
     $backToBattle.append($('<h2>').text(player.pokemon[0].name + " looks like they're healed up and ready for another battle!"));
-    $backToBattle.append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle()))
+    $backToBattle.append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle));
     $('.welcome').append($backToBattle);
   })
 
   //return to battle Function
   const returnToBattle = () => {
-    
+    $('.pokemon-center').hide();
+    renderNextBattle();
   }
 
+  //render the next battle Function
+  const renderNextBattle = () => {
+    $('#playersPokePhoto').removeClass('winner');
+    $('#playersXP').text(player.pokemon[0].xp+'/'+player.pokemon[0].maxxp);
+    $('.battle-play').show();
+    $('.click-area').empty();
+    let $nextOpponentInfo = $('<div>')
+    $nextOpponentInfo.append($('<h2>').text("Next Opponent:"))
+    $('.click-area').append($nextOpponentInfo)
+  }
 
   /////////////////////////
   //POKEMART
