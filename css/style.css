@@ -72,6 +72,15 @@ div img {
   border: 1px solid black;
   border-radius: 5px;
   color: white;
+  padding: 4px;
+}
+
+#confirm {
+  width: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .battle-play {

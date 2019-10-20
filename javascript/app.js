@@ -139,6 +139,7 @@ $(()=>{
   $clickToPick.on('click', (event)=>{
     //retrieve the name of the pokemon that was clicked on
     let $chosenPokemonName = $(event.currentTarget).parent().children('.poke-picture').children('img').attr('id')
+    tempPokemonConfirmName = $chosenPokemonName
     console.log($chosenPokemonName);
     $.ajax ({
       url:'https://pokeapi.co/api/v2/pokemon/'+ $chosenPokemonName,
@@ -216,10 +217,14 @@ $(()=>{
     $choosePokemon.hide();
     //create a new div that the player can click on to confirm their choice
     ///*****NEEDS UPDATING FROM HARDCODED CHARMANDER*****
-    let $confirmDiv = $('<div>').text('click here to confirm you want charmander').on('click', startFirstBattle).attr('id','confirm')
+    let $confirmDiv = $('<div>').attr('id', 'confirm').css('width', "60%")
+    let $confirmText = $('<h2>').text('Are you sure you want '+tempPokemonConfirmName+'? You can only choose your starting pokemon once, so choose wisely!')
+    let $confirmChoosePokemon = $('<h2>').text('Yes, I choose you, '+tempPokemonConfirmName+'!').on('click', startFirstBattle).addClass('click-to-pick')
     //put this new div in the main area
     /////*****NEEDS STYLING!!******//
-    $('.container').append($confirmDiv)
+    $('.container').append($confirmDiv);
+    $confirmDiv.append($confirmText);
+    $confirmDiv.append($confirmChoosePokemon);
   }
 
   /////////////////////////////////
