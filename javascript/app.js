@@ -259,28 +259,27 @@ $(()=>{
 
   //create the click area where the battle will happen.
   const initializeBattle = () => {
-    let $desc = $('<div>').text('Beat the opponent\'s pokemon and get paid! Be careful, if your pokemon\'s XP gets to 0 you lose!')
+    let $desc = $('<h2>').text('Beat the opponent\'s pokemon and get paid! Be careful, if your pokemon\'s XP gets to 0 you lose!')
     $('.click-area').append($desc)
     $('.click-area').append($battleStartButton)
  }
 
  //click listener for battle start button
  $battleStartButton.on('click', ()=>{
-   $battleStartButton.hide();
-   let $playerGoesFirstDiv = $('<div>').text('Go '+player.pokemon[0].name+"!")
-   let $pickAnAttack = $('<div>').text('What attack do you want '+player.pokemon[0].name+' to do?')
-
-   $('.click-area').append($playerGoesFirstDiv)
-   $('.click-area').append($pickAnAttack)
-
-   renderInBattleAttacks();
+   playerFight();
  })// end of battle start button click listener
 
 //render the buttons for the battle
  let renderInBattleAttacks = () => {
    //this could get changed into a for loop...
      $('.click-area').append($attackButton1.text(player.pokemon[0].attacks[0].attackName).addClass('pokemon-move'));
-     $('.click-area').append($attackButton2.text(player.pokemon[0].attacks[1].attackName).addClass('pokemon-move'))
+     $attackButton1.on('click', (event)=> {
+       attackFunction();
+     });
+     $('.click-area').append($attackButton2.text(player.pokemon[0].attacks[1].attackName).addClass('pokemon-move'));
+     $attackButton2.on('click', (event)=> {
+       attackFunction();
+     })
  };//end of renderInBattleAttacks function
 
  //attack Function
@@ -306,15 +305,15 @@ $(()=>{
    checkForOppDefeat();
  }
 
- //player's pokemon attack chosen
-  $attackButton1.on('click', (event)=> {
-    attackFunction();
-  })//end of attack button 1 function
-
-   //player's pokemon attack chosen
-  $attackButton2.on('click', (event)=> {
-    attackFunction();
-  })//end of attack button 2 function
+ // //player's pokemon attack chosen
+ //  $attackButton1.on('click', (event)=> {
+ //    attackFunction();
+ //  })//end of attack button 1 function
+ //
+ //   //player's pokemon attack chosen
+ //  $attackButton2.on('click', (event)=> {
+ //    attackFunction();
+ //  })//end of attack button 2 function
 
  // update opponent's xp display function
  const updateOppXP = () => {
@@ -408,6 +407,7 @@ $(()=>{
       let $attackChoice = $('<h3>').text('Keep Fighting').addClass('choice-button').attr('id', 'keep-fighting');
       $attackChoice.on('click', ()=>{
         console.log('let\'s attack!');
+        playerFight();
       })
       //2. run away
       let $runAwayChoice = $('<h3>').text('Run Away').addClass('choice-button').attr('id', 'run-away');
@@ -425,19 +425,17 @@ $(()=>{
     }
   }
 
-  //function to update player's XP display if they lost
-  const playerLostPokemonXPDisplay = () => {
-    $playersPokemonDiv.children('#playersXP').text('Your Pokemon Fainted!');
-  };
+  //function to keep Fighting
+  const playerFight = () => {
+    $('.click-area').empty();
+    let $playerGoesFirstDiv = $('<div>').text('Go '+player.pokemon[0].name+"!")
+    let $pickAnAttack = $('<div>').text('What attack do you want '+player.pokemon[0].name+' to do?')
 
-  //function to update player's XP display if they still have XP
-  const reducePlayersXPDisplay = () => {
-    $playersPokemonDiv.children('#playersXP').text(player.pokemon[0].xp);
+    $('.click-area').append($playerGoesFirstDiv)
+    $('.click-area').append($pickAnAttack)
+
+    renderInBattleAttacks();
   }
 
-  // //event listener for the keep fighting button
-  // $('#keep-fighting').on('click', ()=> {
-  //   console.log('player wants to continue fighting');
-  // })
 
 }) //closing tag for page load function
