@@ -102,6 +102,18 @@ $(()=>{
   $('#players-inventory-header').hide();
   $('.items-in-inventory').hide();
 
+  const openModal = () => {
+    $('#modal').show();
+  }
+
+  $('#openModal').on('click', openModal)
+
+  const closeModal = () => {
+    $('#modal').hide();;
+  }
+
+  $('#close').on('click', closeModal)
+
   //player's pokemon display
   // let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
   //   $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
