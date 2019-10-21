@@ -267,7 +267,7 @@ $(()=>{
     console.log('player\'s current pokemon is '+ player.pokemon[0].name);
     $playersPokemonDiv.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
     //display the pokemon's xp
-    let $playersXPDisplay = $('<div>').text('XP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP');
+    let $playersXPDisplay = $('<div>').text('HP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP');
     $playersPokemonDiv.append($playersXPDisplay)
   }; //end of the createPlayersPokemonArea function
 
@@ -278,7 +278,7 @@ $(()=>{
     $('.opponent-area').append(caterpiePicture)
     $('.opponent-area').append($('<div>').text(possOpponents[currentOpponentIndex].name).addClass('current-pokemon-name'))
     //display the starting XP for the pokemon
-    let oppDisplayXP = $('<div>').text("XP: "+ possOpponents[currentOpponentIndex].xp+'/'+possOpponents[currentOpponentIndex].maxxp).addClass('xp-stats').attr('id', 'oppXpStat')
+    let oppDisplayXP = $('<div>').text("HP: "+ possOpponents[currentOpponentIndex].xp+'/'+possOpponents[currentOpponentIndex].maxxp).addClass('xp-stats').attr('id', 'oppXpStat')
     $('.opponent-area').append(oppDisplayXP)
     //display reward for defeating pokemon
     let $rewardDisplay = $('<h3>').text('Reward: '+possOpponents[currentOpponentIndex].reward+' coins')
@@ -287,7 +287,7 @@ $(()=>{
 
   //create the click area where the battle will happen.
   const initializeBattle = () => {
-    let $desc = $('<h2>').text('Beat the opponent\'s pokemon and get a reward! Be careful, if your pokemon\'s XP gets to 0 you lose!')
+    let $desc = $('<h2>').text('Beat the opponent\'s pokemon and get a reward! Be careful, if your pokemon\'s HP gets to 0 you lose!')
     $('.click-area').append($desc)
     $('.click-area').append($battleStartButton)
  }
@@ -313,6 +313,7 @@ $(()=>{
 
  //attack Function
  let attackFunction = () => {
+   $('#playersPokePhoto').addClass('player-attack-animation');
    let attackClickedName = event.target.innerText
    // console.log(event.target.innerText);
    console.log(attackClickedName);
@@ -323,7 +324,7 @@ $(()=>{
        tempPower = parseInt(player.pokemon[0].attacks[i].power)
        //reduce the opponent's current pokemon's xp by the amount of power in the attack
        possOpponents[currentOpponentIndex].xp = parseInt(possOpponents[currentOpponentIndex].xp) - tempPower
-       console.log('opponent\'s XP is now '+ possOpponents[currentOpponentIndex].xp);
+       console.log('opponent\'s HP is now '+ possOpponents[currentOpponentIndex].xp);
        checkForOppDefeat();
        return;
      } else {
@@ -338,7 +339,7 @@ $(()=>{
 
  // update opponent's xp display function
  const updateOppXP = () => {
-  $('#oppXpStat').text('XP: '+possOpponents[currentOpponentIndex].xp+'/'+possOpponents[currentOpponentIndex].maxxp);
+  $('#oppXpStat').text('HP: '+possOpponents[currentOpponentIndex].xp+'/'+possOpponents[currentOpponentIndex].maxxp);
   //ths will make it so that the opponent's turn is next
   playersTurn = false
  }
@@ -374,6 +375,7 @@ $(()=>{
 
   //player wins function
   const playerWins = () => {
+    $('#playersPokePhoto').removeClass('player-attack-animation')
     $('#playersPokePhoto').addClass('winner')
     //hide the battle area to display the win information
     $('.click-area').children().hide();
@@ -440,6 +442,7 @@ $(()=>{
 
   //check if player lost Function
   const checkIfPlayerLost = () => {
+    //if the players pokemon still has xp left, we continue to play and let the player choose what to do.
     if (player.pokemon[0].xp > 0) {
       //text displaying in the middle showing how much damage was done and by what attack.
       let $damageText = $('<h2>').text(possOpponents[currentOpponentIndex].name+' attacked '+ player.pokemon[0].name+" using "+opponentChosenAttack +" and did "+ tempOppPower+" damage!");
@@ -448,7 +451,7 @@ $(()=>{
       // console.log('opponent used '+ opponentChosenAttack);
       // console.log('your pokemon now has ' + player.pokemon[0].xp+' xp left');
       //change user's pokemon's display to their current XP
-      $('#playersXP').text('XP: '+player.pokemon[0].xp+'/'+player.pokemon[0].maxxp);
+      $('#playersXP').text('HP: '+player.pokemon[0].xp+'/'+player.pokemon[0].maxxp);
       let $chooseNextStep = $('<h2>').text('What do you want to do next?')
       //create an area for the user to choose the next step
       $('.click-area').append($chooseNextStep)
@@ -476,6 +479,8 @@ $(()=>{
 
   //function to keep Fighting
   const playerFight = () => {
+    $('#playersPokePhoto').removeClass('player-attack-animation')
+    console.log('removing player attack class');
     $('.click-area').empty();
     let $playerGoesFirstDiv = $('<h2>').text('Go '+player.pokemon[0].name+"!")
     let $pickAnAttack = $('<h2>').text('What attack do you want '+player.pokemon[0].name+' to do?')
@@ -506,7 +511,7 @@ $(()=>{
       $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
       $playersPokemon.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
       //display the pokemon's xp
-      $playersPokemon.append($('<div>').text('XP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
+      $playersPokemon.append($('<div>').text('HP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
     $('.pokemon-center').children('.left').append($playersPokemon)
   })
 
@@ -520,7 +525,7 @@ $(()=>{
       $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
       $playersPokemon.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
       //display the pokemon's xp
-      $playersPokemon.append($('<div>').text('XP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
+      $playersPokemon.append($('<div>').text('HP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
     $('.pokemon-center').children('.left').append($playersPokemon)
     $('.welcome').children().hide();
     $('.healed').empty();
@@ -544,7 +549,7 @@ $(()=>{
     //make it so the pokemon picture doesn't dance on start up
     $('#playersPokePhoto').removeClass('winner');
     //update the player's XP to it's current XP
-    $('#playersXP').text('XP: '+player.pokemon[0].xp+'/'+player.pokemon[0].maxxp);
+    $('#playersXP').text('HP: '+player.pokemon[0].xp+'/'+player.pokemon[0].maxxp);
     //show the div for battle
     $('.battle-play').show();
     //empty the old text that was in the click area div
@@ -556,7 +561,7 @@ $(()=>{
     $('.opponent-area').append($('<h2>').text("Next Opponent:"));
     $('.opponent-area').append($('<img>').attr('src', possOpponents[currentOpponentIndex].photoUrl).addClass('players-pokemon-photo'));
     $('.opponent-area').append($('<h2>').text(possOpponents[currentOpponentIndex].name).addClass('current-pokemon-name'));
-    $('.opponent-area').append($('<div>').text("XP: "+ possOpponents[currentOpponentIndex].xp+'/'+possOpponents[currentOpponentIndex].maxxp).addClass('xp-stats').attr('id', 'oppXpStat'));
+    $('.opponent-area').append($('<div>').text("HP: "+ possOpponents[currentOpponentIndex].xp+'/'+possOpponents[currentOpponentIndex].maxxp).addClass('xp-stats').attr('id', 'oppXpStat'));
     $('.opponent-area').append($('<h3>').text('Reward: '+possOpponents[currentOpponentIndex].reward+' coins'));
     //show information about the next opponent before the battle begins
   }
@@ -566,6 +571,7 @@ $(()=>{
   /////////////////////////
   $('#pokemart').on('click', ()=>{
     console.log('user clicked on pokemart');
+    $('#pokemart').removeClass('new-shop')
     renderPokemart();
   })
 
@@ -578,6 +584,7 @@ $(()=>{
     $('.welcome').show();
     $('.welcome').children().show();
     $('.pokemon-center').hide();
+    $('.shop-items')
     if(!player.items[0]){
       $('.current-inventory').append($('<h3>').text('You have no items.'))
     } else {

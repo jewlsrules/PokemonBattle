@@ -280,3 +280,17 @@ div img {
   width: 80%;
   justify-content: space-between;
 }
+
+.player-attack-animation {
+  animation-name: player-attack;
+  animation-duration: 1000ms;
+  animation-iteration-count: 1;
+}
+
+@keyframes player-attack {
+  30% {transform: translateY(-15px) translateX(15px)}
+  60% {transform: translateY(0) translateX(30px)}
+  100% {transform: translateY(0) translateX(0)}
+}
+
+.opponent-attack-animation
