@@ -293,4 +293,14 @@ div img {
   100% {transform: translateY(0) translateX(0)}
 }
 
-.opponent-attack-animation
+.shop-items {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.shop-items > div {
+  max-width: 200px;
+  border: 1px solid black;
+}

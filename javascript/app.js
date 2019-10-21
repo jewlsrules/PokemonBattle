@@ -21,7 +21,7 @@
    name: 'caterpie',
    photoUrl: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/010.png',
    level: 1,
-   reward: 20,
+   reward: 200,
    xp: 48,
    maxxp: 48,
    accuracy: 1,
@@ -40,7 +40,7 @@
    name: 'pidgey',
    photoUrl: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/016.png',
    level: 2,
-   reward: 30,
+   reward: 300,
    xp: 55,
    maxxp: 55,
    accuracy: .75,
@@ -59,7 +59,7 @@
    name: 'pikachu',
    photoUrl: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png',
    level: 3,
-   reward: 40,
+   reward: 400,
    xp: 60,
    maxxp: 60,
    accuracy: .9,
@@ -77,7 +77,8 @@
  ];
 
  //items in shop array
- itemsForSale = []
+ itemsForSale = ['potion', 'full-restore']
+ inStoreItems = []
 
 //on load
 $(()=>{
@@ -409,6 +410,7 @@ $(()=>{
       $('#pokemart').addClass('available');
       $('#pokemart').children('h1').text('Pokemart')
       $('.click-area').append($unlockPokemart)
+      retrieveItemURLFromApi();
     }
     else {
       console.log('player doesn\'t have a win');
@@ -584,7 +586,13 @@ $(()=>{
     $('.welcome').show();
     $('.welcome').children().show();
     $('.pokemon-center').hide();
-    $('.shop-items')
+    for(let l=0;l<inStoreItems.length; l++){
+      let $newItemDiv = $('<div>')
+      $newItemDiv.append($('<h2>').text(inStoreItems[l].name))
+      $newItemDiv.append($('<h3>').text('Cost: '+inStoreItems[l].cost+' coins'))
+      $newItemDiv.append($('<h3>').text(inStoreItems[l].description))
+      $('.shop-items').append($newItemDiv)
+    }
     if(!player.items[0]){
       $('.current-inventory').append($('<h3>').text('You have no items.'))
     } else {
@@ -596,5 +604,37 @@ $(()=>{
     }//end of if statement
   }//end of render pokemart function
 
+  const retrieveItemURLFromApi = () => {
+    console.log('retrieving information about items in the itemsForSale array from pokemon API');
+    for(let i = 0; i<itemsForSale.length;i++){
+      $.ajax ({
+        url:'https://pokeapi.co/api/v2/item?offset=0&limit=2000',
+      }).then(
+        (data)=> {
+          let $resultsLength = data.results.length
+          for(let j = 0; j<$resultsLength; j++){
+            if(data.results[j].name === itemsForSale[i]) {
+              getItemInformation(data.results[j].url)
+            }
+          }
+        })
+    }//end of for loop
+  }//end of retrieveItemInfoFromApi function
+
+  const getItemInformation = (url) => {
+    $.ajax ({
+      url: url,
+    }).then(
+      (data)=>{
+        let $itemName = data.name
+        console.log('item name is '+data.name);
+        let $itemPrice = data.cost
+        console.log('this item costs ' +data.cost);
+        let $itemDesc = data.effect_entries[0].short_effect
+        console.log('this item\'s effect: '+data.effect_entries[0].short_effect);
+        inStoreItems.push({name: $itemName, cost: $itemPrice, description: $itemDesc})
+      }
+    )
+  }
 
 }) //closing tag for page load function
