@@ -102,8 +102,10 @@ div img {
 
 .players-pokemon-photo {
   align-self: center;
-  width: 250px;
-  height: 250px;
+  width: 80%;
+  height: inherit;
+  max-width: 250px;
+  max-height: 250px;
 }
 
 .current-pokemon-name {
@@ -120,18 +122,10 @@ div img {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-self: center;
+  height: 100px;
 }
-
-/* .pokemon-move {
-  color: white;
-  text-align: center;
-  width: 25%;
-  margin: 3% 10%;
-  font-size: 1.2em;
-  background: gray;
-  padding: 5px;
-} */
 
 .opponent-area {
   width: 25%;
@@ -150,12 +144,17 @@ div img {
 }
 
 .click-area {
-  width: 500px;
+  max-width: 500px;
+  min-width: 200px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
   padding: 15px;
+}
+
+.click-area > h2 {
+  text-align: center;
 }
 
 #start-battle {
@@ -166,6 +165,8 @@ div img {
   background-color: gray;
   border: 1px solid black;
   padding: 5px;
+  width: 225px;
+  align-self: center;
 }
 
 .opponent-attack-text {
@@ -301,6 +302,9 @@ div img {
 }
 
 .shop-items > div {
-  max-width: 200px;
+  min-width: 150px;
+  width: 45%;
+  padding: 5px;
+  border-radius: 4px;
   border: 1px solid black;
 }

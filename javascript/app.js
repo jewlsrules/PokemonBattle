@@ -91,7 +91,7 @@ $(()=>{
   const $choosePokemon = $('.choose-pokemon');
   let $clickToPick = $('.click-to-pick');
   let $playersPokemonDiv = $('.players-pokemon');
-  let $battleStartButton = $('<div>').text('Start Battle').attr('id', 'start-battle');
+  let $battleStartButton = $('<div>').text('Start Battle').attr('id', 'start-battle')
   let $attackButton1 = $('<h2>').addClass('choice-button');
   let $attackButton2 = $('<h2>').addClass('choice-button');
   $('.other-options').hide();
@@ -386,10 +386,11 @@ $(()=>{
     currentOpponentIndex++
     player.wins++
     $('#players-bank').text(player.bank)
+    //show the shops after the battle has ended
+    $('.other-options').show();
     // console.log('player has won this many times: '+player.wins);
     //after the player wins the first, easy round which is designed to get them used to how to battle and which attacks they should use, they'll be able to explore the other options in the game.
     if(player.wins === 1) {
-      $('.other-options').show();
       let $introducePokeCenter = $('<div>')
       $('.click-area').append($introducePokeCenter);
       $('#poke-center').addClass('new-shop')
@@ -466,8 +467,10 @@ $(()=>{
         runAway();
       })
       //put these in the player's choice div
-      $chooseNextStep.append($attackChoice);
-      $chooseNextStep.append($runAwayChoice);
+      let $playersChoiceDiv = $('<div>').addClass('battle-attack-picker')
+      $playersChoiceDiv.append($attackChoice);
+      $playersChoiceDiv.append($runAwayChoice);
+      $('.click-area').append($playersChoiceDiv)
       //change the turn so that it's the player's turn again
       player.turn = true;
     } else {
@@ -484,10 +487,15 @@ $(()=>{
     $('.click-area').append($('<h2>').text('You escaped from '+possOpponents[currentOpponentIndex].name+'. Next time you battle, you\'ll face them again, so make sure you\'re ready.'));
     $battleStartButton.on('click', playerFight)
     $('.click-area').append($battleStartButton);
+    if(player.wins > 0){
+      //display the shops and poke center for healing
+      $('.other-options').show();
+    }
   }
 
   //function to keep Fighting
   const playerFight = () => {
+    $('.other-options').hide()
     $('#playersPokePhoto').removeClass('player-attack-animation')
     console.log('removing player attack class');
     $('.click-area').empty();
