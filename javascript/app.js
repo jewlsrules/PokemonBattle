@@ -386,6 +386,7 @@ $(()=>{
     //change the opponent's pokemon to the next in the array
     currentOpponentIndex++
     player.wins++
+    $('#players-bank').text(player.bank)
     // console.log('player has won this many times: '+player.wins);
     //after the player wins the first, easy round which is designed to get them used to how to battle and which attacks they should use, they'll be able to explore the other options in the game.
     if(player.wins === 1) {
@@ -396,9 +397,18 @@ $(()=>{
       let $coinIntroduction = $('<h3>').text('Your Pokemon took damage, let\'s go to the Pokemon Center to get it healed.');
 
       $('.click-area').append($coinIntroduction)
-
-      $('#players-bank').text(player.bank)
-    } else {
+    } else if (player.wins === 2){
+      let $unlockPokemart = $('<div>')
+      $unlockPokemart.append($('<h2>').text('You\'ve unlocked the PokeMart!'))
+      $unlockPokemart.append($('<h2>').text('Do you want to go there now?'))
+      $unlockPokemart.append($('<h2>').text('Go To Pokemart').addClass('choice-button'))
+      $unlockPokemart.append($('<h2>').text('Let\'s Battle!').addClass('choice-button'))
+      $('#pokemart').children('img').removeClass('locked')
+      $('#pokemart').addClass('available');
+      $('#pokemart').children('h1').text('Pokemart')
+      $('.click-area').append($unlockPokemart)
+    }
+    else {
       console.log('player doesn\'t have a win');
     }
   }//end of playerWins function
