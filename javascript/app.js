@@ -97,6 +97,9 @@ $(()=>{
   $('.other-options').hide();
   $('.pokemart').hide();
   $('.pokemon-center').hide();
+  $('#pokemart-header').hide();
+  $('#pokemon-market-header').hide();
+  $('#players-inventory-header').hide();
 
   //player's pokemon display
   // let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
@@ -275,8 +278,8 @@ $(()=>{
   //this function will create the opponent's area with all the opponent pokemon's information
   const createOpponentPokemonArea = () => {
     //hardcoded for now, needs to be updated eventually
-    let caterpiePicture = $('<img>').attr('src', possOpponents[currentOpponentIndex].photoUrl).addClass('players-pokemon-photo').attr('id','oppPhoto')
-    $('.opponent-area').append(caterpiePicture)
+    let opponentPicture = $('<img>').attr('src', possOpponents[currentOpponentIndex].photoUrl).addClass('players-pokemon-photo').attr('id','oppPhoto')
+    $('.opponent-area').append(opponentPicture)
     $('.opponent-area').append($('<div>').text(possOpponents[currentOpponentIndex].name).addClass('current-pokemon-name'))
     //display the starting XP for the pokemon
     let oppDisplayXP = $('<div>').text("HP: "+ possOpponents[currentOpponentIndex].xp+'/'+possOpponents[currentOpponentIndex].maxxp).addClass('xp-stats').attr('id', 'oppXpStat')
@@ -398,14 +401,14 @@ $(()=>{
       $('.click-area').append($coinIntroduction)
       //if the player has one 2x they will unlock the pokemart where they can purchase items for sale
     } else if (player.wins === 2){
-      $('#pokemart').addClass('new-shop')
+
+      $('#pokemart-header').addClass('new-shop').show()
       let $unlockPokemart = $('<div>')
       $unlockPokemart.append($('<h2>').text('You\'ve unlocked the PokeMart!'))
       $unlockPokemart.append($('<h2>').text('Let\'s go there now and see what\'s for sale.'))
-      $unlockPokemart.append($('<h2>').text('Go To Pokemart').addClass('choice-button'))
-      $('#pokemart').children('img').removeClass('locked')
-      $('#pokemart').addClass('available');
-      $('#pokemart').children('h1').text('Pokemart')
+      $('#pokemart-header').children('img').removeClass('locked')
+      $('#pokemart-header').addClass('available');
+      $('#pokemart-header').children('h1').text('Pokemart')
       $('.click-area').append($unlockPokemart)
       retrieveItemURLFromApi();
     }
@@ -483,10 +486,14 @@ $(()=>{
   const runAway = () =>{
     //if the player runs away, restore the opponent's pokemon to it's maximum hp.
     possOpponents[currentOpponentIndex].xp = possOpponents[currentOpponentIndex].maxxp
+    //clear the click area div
     $('.click-area').empty();
+    //add text explaining that the player got away
     $('.click-area').append($('<h2>').text('You escaped from '+possOpponents[currentOpponentIndex].name+'. Next time you battle, you\'ll face them again, so make sure you\'re ready.'));
+    //option to return to the fight
     $battleStartButton.on('click', playerFight)
     $('.click-area').append($battleStartButton);
+    //if the player has had the shops introduced already, then we can show them. otherwise they can only return to the battle
     if(player.wins > 0){
       //display the shops and poke center for healing
       $('.other-options').show();
@@ -495,64 +502,110 @@ $(()=>{
 
   //function to keep Fighting
   const playerFight = () => {
+    //when the player is in battle they should not be able to go to the shop or pokecenter
     $('.other-options').hide()
+    //remove the animation class so we can re-add it later
     $('#playersPokePhoto').removeClass('player-attack-animation')
-    console.log('removing player attack class');
+    // console.log('removing player attack class');
+    //emtpy the click area div
     $('.click-area').empty();
+    //create the text to add inside the click area.
+    //The player will go first, and they can choose which battle they want.
     let $playerGoesFirstDiv = $('<h2>').text('Go '+player.pokemon[0].name+"!")
     let $pickAnAttack = $('<h2>').text('What attack do you want '+player.pokemon[0].name+' to do?')
-
     $('.click-area').append($playerGoesFirstDiv)
     $('.click-area').append($pickAnAttack)
-
+    //create the buttons for the in battle attack choices and put them in the div.
     renderInBattleAttacks();
   }
 
   /////////////////////////
-  //Poke-hospital
+  //PokeCenter
   /////////////////////////
 
   //when the player clicks on the pokecenter icon, show them the poke center and hide the battle area.
   $('#poke-center').on('click', () => {
+    //empty everything to start on a clear slate
     $('.pokemart').hide();
     $('.healed').hide();
-    $('.poke-center-change').show();
+    //display the opening message for the pokecenter
+    // $('.poke-center-change').show();
+    //if this was the first time the player has visited the pokecenter, we need to remove the yellow outline around it the heading image.
     $('#poke-center').removeClass('new-shop')
-    console.log('user clicked on the pokemon center');
+    // console.log('user clicked on the pokemon center');
     //hide the battle area
     $('.battle-play').hide();
     // $('.pokemon-center').empty();
-    $('.pokemon-center').show();
+    // $('.pokemon-center').show();
+    //clear out the left side so it doesn't render twice.
     $('.pokemon-center').children('.left').empty();
+    //render the player's pokemon on the left side and show it's stats.
     let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
       $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
       $playersPokemon.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
       //display the pokemon's xp
       $playersPokemon.append($('<div>').text('HP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
+      //put all the information on the page.
     $('.pokemon-center').children('.left').append($playersPokemon)
+    //check to see if the pokemon needs to be healed
+    if(player.pokemon[0].xp === player.pokemon[0].maxxp){
+      console.log('player is all healed up');
+      //hide the div that was welcoming them
+      $('.pokemon-center').show();
+      $('.welcome').hide();
+      //show them text that they are already healed
+      let $alreadyHealed = $('<div>').addClass('already-healed')
+      $alreadyHealed.append($('<h2>').text('Looks like you\'re Pokemon is already in tip-top shape. Head back to the battle arena and come back when they need to be healed.'));
+      //allow the player to go back to the battle
+      $alreadyHealed.append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle));
+      $('.pokemon-center').append($alreadyHealed)
+    } else {
+      console.log('we need to heal this pokemon');
+      //display the opening message for the pokecenter
+      $('.poke-center-change').show();
+      $('.pokemon-center').show();
+    }
   })
 
+  //when a player clicks the heal pokemon option
   $('#heal-pokemon').on('click', () => {
-    if(player.bank < 25){
-      console.log('not enough coins!');
-    } else {
-      player.pokemon[0].xp = player.pokemon[0].maxxp;
-      player.bank = player.bank - 25
-      $('#players-bank').text(player.bank)
-      console.log(player);
-      $('.pokemon-center').children('.left').empty();
-      let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
-        $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
-        $playersPokemon.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
-        //display the pokemon's xp
-        $playersPokemon.append($('<div>').text('HP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
-      $('.pokemon-center').children('.left').append($playersPokemon)
-      $('.welcome').children().hide();
-      $('.healed').empty();
-      $('.healed').append($('<h2>').text(player.pokemon[0].name + " looks like they're healed up and ready for another battle!"));
-      $('.healed').append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle));
-      $('.healed').show();
-    }//end of else
+      //Check to see if the player has enough money.
+      if(player.bank < 25){
+        //clear the div that was welcoming them
+        $('.welcome').children().hide();
+        //show them text that they don't have enough money.
+        $('.welcome').append($('<h2>').text('Sorry, you don\'t have enough coins to heal your Pokemon. Head back to the battle arena to earn more!'));
+        //allow the player to go back to the battle
+        $('.welcome').append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle));
+        // console.log('not enough coins!');
+        //if the player does have enough coins, allow them to heal their pokemon
+      } else {
+        //update the pokemon's XP to the max
+        player.pokemon[0].xp = player.pokemon[0].maxxp;
+        //remove 25 coins from the players bank
+        player.bank = player.bank - 25
+        //update the players bank display
+        $('#players-bank').text(player.bank)
+        // console.log(player);
+        //update the player's pokemon display with the new HP
+        $('.pokemon-center').children('.left').empty();
+        let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
+          $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
+          $playersPokemon.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
+          //display the pokemon's xp
+          $playersPokemon.append($('<div>').text('HP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
+        $('.pokemon-center').children('.left').append($playersPokemon)
+        //hide the welcome message
+        $('.welcome').children().hide();
+        //clear the healed div so we can re-render text
+        $('.healed').empty();
+        //new text showing the pokemon was healed.
+        $('.healed').append($('<h2>').text(player.pokemon[0].name + " looks like they're healed up and ready for another battle!"));
+        //allow the user to return to battle
+        $('.healed').append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle));
+        //show the div.
+        $('.healed').show();
+      }//end of else
   })
 
   ///////////////////////////
@@ -590,7 +643,7 @@ $(()=>{
   /////////////////////////
   //POKEMART
   /////////////////////////
-  $('#pokemart').on('click', ()=>{
+  $('#pokemart-header').on('click', ()=>{
     console.log('user clicked on pokemart');
     $('#pokemart').removeClass('new-shop')
     renderPokemart();
@@ -607,7 +660,7 @@ $(()=>{
     $('.pokemon-center').hide();
     $('.shop-items').empty();
     for(let l=0;l<inStoreItems.length; l++){
-      let $newItemDiv = $('<div>')
+      let $newItemDiv = $('<div>').addClass('ind-shop-item')
       $newItemDiv.append($('<h2>').text(inStoreItems[l].name))
       $newItemDiv.append($('<h3>').text('Cost: '+inStoreItems[l].cost+' coins'))
       $newItemDiv.append($('<h3>').text(inStoreItems[l].description))
