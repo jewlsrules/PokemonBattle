@@ -73,7 +73,7 @@
        power: 10,
        liklihood: .5
      }]
- },
+ }
  ];
 
  //items in shop array
@@ -100,6 +100,7 @@ $(()=>{
   $('#pokemart-header').hide();
   $('#pokemon-market-header').hide();
   $('#players-inventory-header').hide();
+  $('.items-in-inventory').hide();
 
   //player's pokemon display
   // let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
@@ -273,6 +274,16 @@ $(()=>{
     //display the pokemon's xp
     let $playersXPDisplay = $('<div>').text('HP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP');
     $playersPokemonDiv.append($playersXPDisplay)
+    renderInventory();
+    // if(!player.items[0]){
+    //   $('.items-in-inventory').append($('<h3>').text('You have no items.'))
+    // } else {
+    //   let $itemInventoryListDisplay = $('<ul>')
+    //   for(let i=0;i<player.items.length;i++){
+    //     let $itemLI = $('<li>').text(player.item[i].name)
+    //     $itemInventoryListDisplay.append($itemLI)
+    //   }
+
   }; //end of the createPlayersPokemonArea function
 
   //this function will create the opponent's area with all the opponent pokemon's information
@@ -402,6 +413,7 @@ $(()=>{
       //if the player has one 2x they will unlock the pokemart where they can purchase items for sale
     } else if (player.wins === 2){
       $('#pokemart-header').addClass('new-shop').show()
+      $('.items-in-inventory').show()
       let $unlockPokemart = $('<div>')
       $unlockPokemart.append($('<h2>').text('You\'ve unlocked the PokeMart!'))
       $unlockPokemart.append($('<h2>').text('Let\'s go there now and see what\'s for sale.'))
@@ -621,8 +633,26 @@ $(()=>{
 
   $('#battle-arena').on('click', returnToBattle)
 
+  const renderInventory = () => {
+    $('.items-in-inventory').empty()
+    $('.items-in-inventory').append($('<h2>').text('Your Inventory'))
+    if(!player.items[0]){
+      console.log('player has no items to show');
+      $('.items-in-inventory').append($('<h3>').text('You have no items.'))
+    } else {
+      console.log('player has items, checking what they are');
+      let $itemInventoryListDisplay = $('<ul>')
+      for(let i=0;i<player.items.length;i++){
+        let $itemLI = $('<li>').text(player.items[i].name)
+        $itemInventoryListDisplay.append($itemLI)
+      }
+      $('.items-in-inventory').append($itemInventoryListDisplay)
+    }
+  }
+
   //render the next battle Function
   const renderNextBattle = () => {
+    renderInventory();
     //make it so the pokemon picture doesn't dance on start up
     $('#playersPokePhoto').removeClass('winner');
     //update the player's XP to it's current XP
