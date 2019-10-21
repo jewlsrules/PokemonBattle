@@ -401,7 +401,6 @@ $(()=>{
       $('.click-area').append($coinIntroduction)
       //if the player has one 2x they will unlock the pokemart where they can purchase items for sale
     } else if (player.wins === 2){
-
       $('#pokemart-header').addClass('new-shop').show()
       let $unlockPokemart = $('<div>')
       $unlockPokemart.append($('<h2>').text('You\'ve unlocked the PokeMart!'))
@@ -659,16 +658,42 @@ $(()=>{
     $('.welcome').children().show();
     $('.pokemon-center').hide();
     $('.shop-items').empty();
+    //show the items for sale and create a clickable div for each one.
     for(let l=0;l<inStoreItems.length; l++){
       let $newItemDiv = $('<div>').addClass('ind-shop-item')
-      $newItemDiv.append($('<h2>').text(inStoreItems[l].name))
+      $newItemDiv.append($('<h2>').text(inStoreItems[l].name).attr('id', inStoreItems.name))
       $newItemDiv.append($('<h3>').text('Cost: '+inStoreItems[l].cost+' coins'))
       $newItemDiv.append($('<h3>').text(inStoreItems[l].description))
       $('.shop-items').append($newItemDiv)
+      $newItemDiv.on('click', (event)=>{
+        console.log('user wants to buy '+ $(event.currentTarget).children('h2').text());
+        let $itemToBuy = $(event.currentTarget).children('h2').text()
+        for(let i=0;i<inStoreItems.length; i++){
+          if(inStoreItems[i].name === $itemToBuy){
+            console.log('user will spend this much on the item: '+inStoreItems[i].cost);
+            if(player.bank < inStoreItems[i].cost){
+              alert('You don\'t have enough coins');
+            } else {
+              player.bank = player.bank - inStoreItems[i].cost
+              player.items.push({name: inStoreItems[i].name})
+              console.log(player.items);
+              $('#players-bank').text(player.bank)
+              let $itemList = $('<ul>');
+              for(let i = 0; i<player.items.length; i++){
+                $itemList.append($('<li>').text(player.items[i].name))
+              }//end of for loop
+              $('.current-inventory').empty();
+              $('.current-inventory').append($itemList);
+            }
+          }
+        }
+      })
     }
+    //if the player's inventory is empty, display text
     if(!player.items[0]){
       $('.current-inventory').append($('<h3>').text('You have no items.'))
     } else {
+      //if the player already has items in their inventory, show the items.
       let $itemList = $('<ul>');
       for(let i = 0; i<player.items.length; i++){
         $itemList.append($('<li>').text(player.items[i].itemName))
@@ -677,6 +702,7 @@ $(()=>{
     }//end of if statement
   }//end of render pokemart function
 
+  //retrieving the URL for an item in the shop.
   const retrieveItemURLFromApi = () => {
     console.log('retrieving information about items in the itemsForSale array from pokemon API');
     for(let i = 0; i<itemsForSale.length;i++){
@@ -694,6 +720,7 @@ $(()=>{
     }//end of for loop
   }//end of retrieveItemInfoFromApi function
 
+  //getting the actual information for the item using the URL found in the above ajax call.
   const getItemInformation = (url) => {
     $.ajax ({
       url: url,
@@ -708,6 +735,6 @@ $(()=>{
         inStoreItems.push({name: $itemName, cost: $itemPrice, description: $itemDesc})
       }
     )
-  }
+  }//end of getItemInformation ajax pull
 
 }) //closing tag for page load function
