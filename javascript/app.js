@@ -290,13 +290,9 @@ $(()=>{
   const initializeBattle = () => {
     let $desc = $('<h2>').text('Beat the opponent\'s pokemon and get a reward! Be careful, if your pokemon\'s HP gets to 0 you lose!')
     $('.click-area').append($desc)
+    $battleStartButton.on('click', playerFight)
     $('.click-area').append($battleStartButton)
  }
-
- //click listener for battle start button
- $battleStartButton.on('click', ()=>{
-   playerFight();
- })// end of battle start button click listener
 
 //render the buttons for the battle
  let renderInBattleAttacks = () => {
@@ -467,6 +463,7 @@ $(()=>{
       let $runAwayChoice = $('<h3>').text('Run Away').addClass('choice-button').attr('id', 'run-away');
       $runAwayChoice.on('click', ()=> {
         console.log('run away!!');
+        runAway();
       })
       //put these in the player's choice div
       $chooseNextStep.append($attackChoice);
@@ -477,6 +474,16 @@ $(()=>{
       $('#playersXP').text('Your Pokemon Fainted!');
       alert('You lose.');
     }
+  }
+
+  //run away function
+  const runAway = () =>{
+    //if the player runs away, restore the opponent's pokemon to it's maximum hp.
+    possOpponents[currentOpponentIndex].xp = possOpponents[currentOpponentIndex].maxxp
+    $('.click-area').empty();
+    $('.click-area').append($('<h2>').text('You escaped from '+possOpponents[currentOpponentIndex].name+'. Next time you battle, you\'ll face them again, so make sure you\'re ready.'));
+    $battleStartButton.on('click', playerFight)
+    $('.click-area').append($battleStartButton);
   }
 
   //function to keep Fighting
@@ -518,22 +525,26 @@ $(()=>{
   })
 
   $('#heal-pokemon').on('click', () => {
-    player.pokemon[0].xp = player.pokemon[0].maxxp;
-    player.bank = player.bank - 5
-    $('#players-bank').text(player.bank)
-    console.log(player);
-    $('.pokemon-center').children('.left').empty();
-    let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
-      $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
-      $playersPokemon.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
-      //display the pokemon's xp
-      $playersPokemon.append($('<div>').text('HP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
-    $('.pokemon-center').children('.left').append($playersPokemon)
-    $('.welcome').children().hide();
-    $('.healed').empty();
-    $('.healed').append($('<h2>').text(player.pokemon[0].name + " looks like they're healed up and ready for another battle!"));
-    $('.healed').append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle));
-    $('.healed').show();
+    if(player.bank < 25){
+      console.log('not enough coins!');
+    } else {
+      player.pokemon[0].xp = player.pokemon[0].maxxp;
+      player.bank = player.bank - 25
+      $('#players-bank').text(player.bank)
+      console.log(player);
+      $('.pokemon-center').children('.left').empty();
+      let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
+        $playersPokemon.append($('<img>').attr('src', player.pokemon[0].img).addClass('players-pokemon-photo'));
+        $playersPokemon.append($('<div>').text(player.pokemon[0].name).addClass('current-pokemon-name'))
+        //display the pokemon's xp
+        $playersPokemon.append($('<div>').text('HP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
+      $('.pokemon-center').children('.left').append($playersPokemon)
+      $('.welcome').children().hide();
+      $('.healed').empty();
+      $('.healed').append($('<h2>').text(player.pokemon[0].name + " looks like they're healed up and ready for another battle!"));
+      $('.healed').append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle));
+      $('.healed').show();
+    }//end of else
   })
 
   ///////////////////////////
@@ -586,6 +597,7 @@ $(()=>{
     $('.welcome').show();
     $('.welcome').children().show();
     $('.pokemon-center').hide();
+    $('.shop-items').empty();
     for(let l=0;l<inStoreItems.length; l++){
       let $newItemDiv = $('<div>')
       $newItemDiv.append($('<h2>').text(inStoreItems[l].name))
