@@ -524,6 +524,7 @@ $(()=>{
 
   //when the player clicks on the pokecenter icon, show them the poke center and hide the battle area.
   $('#poke-center').on('click', () => {
+    $('#battle-arena').show();
     //empty everything to start on a clear slate
     $('.pokemart').hide();
     $('.healed').hide();
@@ -614,8 +615,11 @@ $(()=>{
   //return to battle Function
   const returnToBattle = () => {
     $('.pokemon-center').hide();
+    $('.pokemart').hide();
     renderNextBattle();
   }
+
+  $('#battle-arena').on('click', returnToBattle)
 
   //render the next battle Function
   const renderNextBattle = () => {
@@ -689,6 +693,7 @@ $(()=>{
         }
       })
     }
+
     //if the player's inventory is empty, display text
     if(!player.items[0]){
       $('.current-inventory').append($('<h3>').text('You have no items.'))
