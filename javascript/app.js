@@ -393,16 +393,16 @@ $(()=>{
       $('.other-options').show();
       let $introducePokeCenter = $('<div>')
       $('.click-area').append($introducePokeCenter);
-
+      $('#poke-center').addClass('new-shop')
       let $coinIntroduction = $('<h3>').text('Your Pokemon took damage, let\'s go to the Pokemon Center to get it healed.');
-
       $('.click-area').append($coinIntroduction)
+      //if the player has one 2x they will unlock the pokemart where they can purchase items for sale
     } else if (player.wins === 2){
+      $('#pokemart').addClass('new-shop')
       let $unlockPokemart = $('<div>')
       $unlockPokemart.append($('<h2>').text('You\'ve unlocked the PokeMart!'))
-      $unlockPokemart.append($('<h2>').text('Do you want to go there now?'))
+      $unlockPokemart.append($('<h2>').text('Let\'s go there now and see what\'s for sale.'))
       $unlockPokemart.append($('<h2>').text('Go To Pokemart').addClass('choice-button'))
-      $unlockPokemart.append($('<h2>').text('Let\'s Battle!').addClass('choice-button'))
       $('#pokemart').children('img').removeClass('locked')
       $('#pokemart').addClass('available');
       $('#pokemart').children('h1').text('Pokemart')
@@ -492,9 +492,13 @@ $(()=>{
 
   //when the player clicks on the pokecenter icon, show them the poke center and hide the battle area.
   $('#poke-center').on('click', () => {
+    $('.healed').hide();
+    $('.poke-center-change').show();
+    $('#poke-center').removeClass('new-shop')
     console.log('user clicked on the pokemon center');
     //hide the battle area
     $('.battle-play').hide();
+    // $('.pokemon-center').empty();
     $('.pokemon-center').show();
     $('.pokemon-center').children('.left').empty();
     let $playersPokemon = $('<div>').addClass('showPlayerPokemon')
@@ -518,10 +522,10 @@ $(()=>{
       $playersPokemon.append($('<div>').text('XP: '+ player.pokemon[0].xp+'/'+player.pokemon[0].maxxp).addClass('xp-stats').attr('id', 'playersXP'));
     $('.pokemon-center').children('.left').append($playersPokemon)
     $('.welcome').children().hide();
-    let $backToBattle = $('<div>')
-    $backToBattle.append($('<h2>').text(player.pokemon[0].name + " looks like they're healed up and ready for another battle!"));
-    $backToBattle.append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle));
-    $('.welcome').append($backToBattle);
+    $('.healed').empty();
+    $('.healed').append($('<h2>').text(player.pokemon[0].name + " looks like they're healed up and ready for another battle!"));
+    $('.healed').append($('<h2>').text('Return to Battle Arena').addClass('choice-button').attr('id', 'returnToBattleButton').on('click', returnToBattle));
+    $('.healed').show();
   })
 
   ///////////////////////////
