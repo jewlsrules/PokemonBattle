@@ -2,7 +2,7 @@
 Pokemon Battle Game where a player chooses a starting pokemon and battles against opponent pokemon to earn coins which can be used to purchase items.
 
 ## Getting Started
-To get started open up jewlsrules.github.io/PokemonBattle. This will launch a new game every time it is refreshed.
+To get started open up www.jewlsrules.github.io/PokemonBattle. This will launch a new game every time it is refreshed.
 
 Choose your starting Pokemon. The information on the starting Pokemon is taken directly from the Pokemon API.
 
