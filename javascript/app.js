@@ -492,6 +492,7 @@ $(()=>{
 
   //when the player clicks on the pokecenter icon, show them the poke center and hide the battle area.
   $('#poke-center').on('click', () => {
+    $('.pokemart').hide();
     $('.healed').hide();
     $('.poke-center-change').show();
     $('#poke-center').removeClass('new-shop')
@@ -563,42 +564,30 @@ $(()=>{
   /////////////////////////
   //POKEMART
   /////////////////////////
-  // $('#pokemart').on('click', ()=>{
-  //   console.log('user clicked on pokemart');
-  //   renderPokemart();
-  // })
-  //
-  // //if this is the player's first visit to the pokemart, then we should introduce them to what it is and how to buy products
-  // const renderPokemart = () => {
-  //   //hide the battle area
-  //   $('.battle-play').hide();
-  //   //show the shop div
-  //   $('.pokemart').show();
-  //   //if this is the first visit to the pokemart, we will show them an intro modal
-  //   if (player.wins === 1) {
-  //     introducePokemart();
-  //     //if the player has won and been to the shop before, we'll just show the shop and skip the intro
-  //   } else {
-  //     showPokemart();
-  //   }
-  // }
-  //
-  // //introduce pokemart Function
-  // const introducePokemart = () => {
-  //   //enter a modal to introduce the pokemart and what you can buy
-  //   showPokemart();
-  //   $.ajax ({
-  //     //we get the url from the attack button click listener
-  //     url: 'https://pokeapi.co/api/v2/item/?offset=00&limit=1000'
-  //   }).then(
-  //     (data) => {
-  //       let itemLength = data.results.length;
-  //       for(let i=0; i<itemLength;i++){
-  //         if(data.results[i].name)
-  //       }
-  //     }
-  //   )//end of ajax call
-  // }
+  $('#pokemart').on('click', ()=>{
+    console.log('user clicked on pokemart');
+    renderPokemart();
+  })
+
+  //if this is the player's first visit to the pokemart, then we should introduce them to what it is and how to buy products
+  const renderPokemart = () => {
+    //hide the battle area
+    $('.battle-play').hide();
+    //show the shop div
+    $('.pokemart').show();
+    $('.welcome').show();
+    $('.welcome').children().show();
+    $('.pokemon-center').hide();
+    if(!player.items[0]){
+      $('.current-inventory').append($('<h3>').text('You have no items.'))
+    } else {
+      let $itemList = $('<ul>');
+      for(let i = 0; i<player.items.length; i++){
+        $itemList.append($('<li>').text(player.items[i].itemName))
+      }//end of for loop
+      $('.current-inventory').append($itemList)
+    }//end of if statement
+  }//end of render pokemart function
 
 
 }) //closing tag for page load function
