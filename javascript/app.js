@@ -73,6 +73,25 @@
        power: 10,
        liklihood: .5
      }]
+ },
+ {
+   name: 'onix',
+   photoUrl: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/095.png',
+   level: 4,
+   reward: 100,
+   xp: 125,
+   maxxp: 125,
+   accuracy: .9,
+   attacks: [{
+       attackName: 'tackle',
+       power: 48,
+       liklihood: .5
+     },
+     {
+       attackName: 'body-slam',
+       power: 35,
+       liklihood: .5
+     }]
  }
  ];
 

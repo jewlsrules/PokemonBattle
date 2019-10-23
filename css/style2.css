@@ -1,5 +1,5 @@
 body {
-  background: cornflowerblue;
+  background: #e0f3ff;
   font-family: 'Rubik', sans-serif;
 }
 
@@ -155,7 +155,7 @@ div img {
   align-self: center;
 }
 
-@media (min-width:900px){
+@media (min-width:875px){
   .click-area {
     order: 1;
     min-width: 250px;
@@ -348,6 +348,11 @@ div img {
   width: 80%;
 }
 
+.items-in-inventory {
+  width: 85%;
+  text-align: center;
+}
+
 #modal {
   display: none;
 	background-color: rgba(0,0,0,0.4);
@@ -386,4 +391,10 @@ div img {
   border: 1px solid black;
   padding: 2px;
   border-radius: 3px;
+}
+
+#openModal {
+  font-size: .7em;
+  background: gray;
+  color: white;
 }
