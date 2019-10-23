@@ -4,7 +4,10 @@
 To get started open up www.jewlsrules.github.io/PokemonBattle. This will launch a new game every time it is refreshed.
 To get started open up https://jewlsrules.github.io/PokemonBattle/. This will launch a new game every time it is refreshed.
 
-Choose your starting Pokemon. The information on the starting Pokemon is taken directly from the Pokemon API.
+Choose your starting Pokemon. The information on the starting Pokemon is taken directly from the Pokemon API
+
+## Pokemon Battle
+Choose your Pokemon's attack based on their actual attacks from the game! Be careful, if your Pokemon's HP gets to 0, you lose!
 
 ## API
  This game uses the Pokemon API at https://pokeapi.co
