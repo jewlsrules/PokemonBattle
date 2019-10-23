@@ -1,5 +1,5 @@
 body {
-  background: #e0f3ff;
+  background: #D8DDDE;
   font-family: 'Rubik', sans-serif;
 }
 
@@ -11,10 +11,13 @@ body {
 }
 
 .header{
+  background-color: #8C271E;
+  color: #D8DDDE;
   width: 100%;
     font-size: 1.75em;
     text-align: center;
     border-bottom: 1px solid black;
+    padding-bottom: 5px;
 }
 
 .header > h1 {
@@ -92,11 +95,12 @@ div img {
 }
 
 .players-pokemon {
+  background-color: #D9F7FA;
   width: 40%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  border: 1px solid black;
+  border: 1px solid #CFCBCA;
   border-radius: 3px;
 }
 
@@ -109,7 +113,7 @@ div img {
 }
 
 .current-pokemon-name {
-  color: white;
+  color: black;
   text-align: center;
   text-transform: capitalize;
   font-size: 2em;
@@ -128,11 +132,12 @@ div img {
 }
 
 .opponent-area {
+  background-color: #D9F7FA;
   width: 40%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  border: 1px solid black;
+  border: 1px solid #CFCBCA;
   border-radius: 3px;
   order: 2;
 }
@@ -355,6 +360,7 @@ div img {
 
 #modal {
   display: none;
+  color: black;
 	background-color: rgba(0,0,0,0.4);
 	position: fixed;
 	top: 0;
